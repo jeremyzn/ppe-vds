@@ -1,0 +1,811 @@
+/* ------------------------------------------------------------
+   Feuille de style globale
+   Mise à jour : 4 septembre 2025
+   Version : 2025.4
+------------------------------------------------------------ */
+
+/*
+:root — Déclaration des variables CSS globales (Custom Properties)
+Les variables permettent de centraliser les couleurs, tailles, etc.
+Facile à maintenir : une seule modification suffit pour répercuter partout.
+*/
+
+:root {
+    --background-color: white;
+
+    --background-color-header: #0790e4;
+    --background-color-footer: #0790e4;
+    --background-color-entete: #0790e4;
+    --background-color-thead: transparent;
+
+    --text-color: #282828;
+    --text-color-header: white;
+    --text-color-footer: white;
+    --text-color-table: black;
+    --text-error: #ff0000;
+    --text-color-hover: rgb(249, 237, 5);
+
+    --border-color: #D0D0D0;
+    --border-color-table: #68a0dd;
+
+    --taille-police: clamp(12px, 0.5vw + 12px, 20px);
+}
+
+/*
+* — Sélecteur universel : normalise les marges et paddings par défaut.
+box-sizing: border-box permet de ne pas inclure les paddings/marges dans le calcul de largeur/hauteur.
+*/
+
+* {
+    margin: 0;
+    padding: 0;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+}
+
+/*
+html, body — Définissent le comportement global de la page HTML
+*/
+html,
+body {
+    font-family: 'Open Sans', sans-serif;
+    height: 100%;
+    font-weight: 400;
+    overflow-x: hidden; /* Empêche le scroll horizontal */
+    background: var(--background-color);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-size: var(--taille-police);
+}
+
+html {
+    font-size: var(--taille-police);
+}
+
+/*
+main — Zone principale de contenu (entre header et footer)
+flex-grow permet d’occuper tout l’espace vertical restant.
+*/
+
+main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+	padding-left : 5px;
+}
+
+/*
+.iframe-container — Conteneur permettant d’encapsuler des iframes tout en garantissant un bon comportement responsive.
+*/
+main .iframe-container {
+    flex-grow: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+main iframe {
+    flex-grow: 1;
+    width: 100%;
+    border: none;
+}
+
+/*
+header — Définition de l’apparence de l’en-tête de la page
+*/
+header {
+    vertical-align: middle;
+    color: var(--text-color-header);
+    background-color: var(--background-color-header);
+    width: 100%;
+    min-height: 50px;
+    padding: 10px;
+}
+
+/*
+Styles spécifiques aux liens dans l’en-tête : visited, normaux, et tous sauf .btn
+*/
+header a:visited {
+    color: var(--text-color-footer);
+}
+
+header a:not(.btn) {
+    color: var(--text-color-footer);
+}
+
+header a {
+    color: var(--text-color-header);
+    text-decoration: underline;
+}
+
+/*
+footer — Apparence du pied de page, similaire au header
+*/
+footer {
+    vertical-align: middle;
+    color: var(--text-color-footer);
+    background-color: var(--background-color-footer);
+    width: 100%;
+    min-height: 50px;
+    padding: 10px;
+}
+
+footer a:visited {
+    color: var(--text-color-footer);
+}
+
+footer a {
+    color: var(--text-color-header);
+    text-decoration: underline;
+}
+
+/*
+Effet de hover sur les liens dans le header et le footer
+*/
+footer a:hover, header a:hover {
+    color: var(--text-color-hover);
+}
+
+/*
+pre — Style des blocs de code ou texte préformaté
+*/
+pre {
+    background-color: #d1f59d;
+    padding: 10px;
+    border: 1px solid #ccc;
+    font-family: monospace;
+    color: #333;
+}
+
+p {
+    margin: 0;
+    padding: 0
+}
+
+/*
+ Tableau
+*/
+
+table {
+    table-layout: fixed;
+    border: 1px solid var(--border-color-table);
+    padding: 5px;
+}
+
+/* Pour que les colonnes aient la même largeur */
+
+.table-fixed {
+    table-layout: fixed;
+    width: 100%;
+}
+
+tr {
+    line-height: 20px;
+}
+
+tr.clickable {
+    cursor: pointer;
+}
+
+tr.clickable:hover {
+    background-color: #f0f0f0;
+    color: #d42b2b;
+}
+
+tr:active {
+    background-color: red;
+}
+
+thead {
+    font-weight: bold;
+    border: 1px solid var(--border-color-table);
+    background-color: var(--background-color-thead);
+}
+
+tbody {
+    /*  background-color: #E0E0E0; */
+    border: 1px solid var(--border-color-table);
+}
+
+th {
+    line-height: 40px;
+    padding: 5px;
+}
+
+td {
+    padding: 5px;
+}
+
+/* lien */
+
+a, a:hover, a:visited, a:active {
+    text-decoration: none;
+    color: var(--text-color)
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block; /* Supprime les espaces vides sous les images */
+    margin: 0 auto; /* Centre les images horizontalement si nécessaire */
+}
+
+img.logo {
+    max-height: 80px;
+    height: auto;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+/* entête des cadres de la page d'accueil */
+
+.entete {
+    background-color: var(--background-color-entete);
+    color: white;
+    padding: 10px;
+}
+
+/* lien à l'intérieur des cadres de la page d'accueil */
+
+.lien {
+    display: block;
+    text-align: left;
+    margin-top: 4px;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    border: 1px solid var(--background-color-entete);
+    background-color: transparent;
+    border-radius: 0.25rem;
+    text-decoration: none;
+}
+
+.lien:hover {
+    background-color: var(--background-color-entete);
+    color: #fff;
+}
+
+/* lien secondaire pour les boutons de la page d'accueil */
+
+.liens-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.lien2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    width: 100%;
+    max-width: 150px; /* largeur max pour garder le responsive */
+    max-height: 45px; /* hauteur fixe */
+
+    margin: 0.5rem auto; /* centrage + espacement */
+    padding: 30px;
+
+    font-size: 1rem;
+    font-weight: 500;
+
+    background-color: #dc3554;
+    color: #fff !important;
+
+    border-radius: 0.25rem;
+    text-decoration: none;
+
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.lien2:hover {
+    color: #3586dc !important;
+    background-color: orange;
+}
+
+/* les champs de saisie */
+
+fieldset {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+legend {
+    width: auto;
+    padding: 0 5px;
+    margin-bottom: 0;
+    font-size: inherit;
+    line-height: inherit;
+    border-bottom: none;
+    text-align: left;
+    float: none !important;
+}
+
+label {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #6c6c6c;
+    margin-right: 10px;
+    display: block;
+}
+
+
+input, textarea {
+    border: 1px solid lightgray;
+
+    border-radius: 0;
+    color: #0f7df5;
+    outline: 0;
+    box-shadow: 0 0 0 0;
+    padding: 0.375rem 0.75rem;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    width: 100%;
+}
+
+input[type=date] {
+    width: 180px;
+}
+
+input:disabled, select:disabled {
+    border: 0 solid;
+    border-radius: 0;
+}
+
+input:focus, select:focus {
+    border: 0;
+    border: 1px solid dodgerblue;
+    background-color: #f0f0f0;
+    border-radius: 0;
+    outline: 0;
+    box-shadow: 0 0 0 0;
+}
+
+textarea:focus {
+    border: 1px solid dodgerblue;
+    background-color: #f0f0f0;
+    outline: 0;
+    box-shadow: 0 0 0 0;
+}
+
+input::placeholder {
+    font-size: 0.8rem;
+}
+
+/* Style pour la bordure de la case à cocher */
+
+input[type="checkbox"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: #1d1d1d 1px solid;
+    width: 25px;
+    height: 25px;
+    border-radius: 5px; /* Pour une bordure arrondie */
+    outline: none;
+}
+
+/* Style pour la coche à l'intérieur de la case à cocher */
+
+input[type="checkbox"]:checked {
+    background-color: #81ed81;
+    border: #1d1d1d 1px solid;
+}
+
+/* RETIRER LES FLÈCHES DES INPUTS NUMBER */
+/* Firefox */
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+/* Chrome */
+
+input::-webkit-inner-spin-button,
+input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+select {
+    border: 1px solid lightgray;
+    border-radius: 0;
+    color: #0f7df5;
+    outline: 0;
+    box-shadow: 0 0 0 0;
+    padding: 0.375rem 0.75rem;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    width: 100%;
+}
+
+
+.formulaire {
+    margin: 1rem 0 1rem 0;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    box-sizing: border-box;
+    border-radius: 10px;
+    border: darkblue 1px solid;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    max-width: 720px; /* Largeur maximale pour garder le responsive */
+}
+
+/* style pour un champ de recherche fusionné avec son label  */
+
+.form-recherche {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    max-width: 100%;
+    margin-bottom: 1rem;
+}
+
+.form-recherche label {
+    white-space: nowrap; /* pour éviter le retour à la ligne */
+}
+
+.form-recherche input {
+    flex: 1 1 auto; /* prend tout l'espace disponible */
+    max-width: 350px;
+    padding: 0.4rem 0.6rem;
+    font-size: 1rem;
+    border-bottom: 1px solid var(--border-color-table);
+}
+
+.form-recherche input::placeholder {
+    font-size: 0.65rem;
+}
+
+.obligatoire:after {
+    color: red;
+    content: ' *';
+}
+
+.erreur {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: var(--text-error);
+}
+
+
+/* Conteneur d’un champ (label + input + message d’erreur) */
+
+.champ {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center; /* ⬅️ aligne les enfants en haut */
+    gap: 0 0;
+
+    /* Valeurs par défaut, surchargées au besoin par style="--label-width: ... --input-max-width: ..." */
+    --label-width: 180px;
+    --input-max-width: 300px;
+}
+
+/* Label du champ */
+
+.champ label {
+    flex: 0 0 var(--label-width);
+    min-width: var(--label-width);
+    margin: 0;
+    font-size: 0.85rem;
+    line-height: 1.5; /* pour un peu d’aération sans fausser l’alignement */
+}
+
+/* Input, textarea ou select */
+
+.champ input,
+.champ select,
+.champ textarea {
+    flex: 1 1 auto;
+    max-width: var(--input-max-width);
+    height: 2.1rem; /* assure une hauteur cohérente */
+    padding: 0.25rem 0.5rem;
+    font-size: 0.95rem;
+}
+
+/* champ effaçable */
+
+.champ-optionnel {
+    position: relative;
+    display: inline-block;
+}
+
+.champ-optionnel input {
+    padding-right: 30px;
+}
+
+.icone-effacer {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    cursor: pointer;
+    color: #888;
+    display: none;
+}
+
+.icone-effacer:hover {
+    color: #c00;
+}
+
+
+@media (max-width: 600px) {
+    .champ {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .champ label {
+        min-width: unset;
+        flex: 1 1 auto;
+    }
+
+    /* En mobile, le message doit s'aligner comme un block */
+    .champ > .messageErreur {
+        padding-left: 0;
+        margin-left: 0;
+    }
+}
+
+output {
+    display: inline-block;
+    padding: 0.375rem 0.75rem;
+    border: 1px solid dodgerblue;
+    border-radius: 5px;
+    min-width: 150px;
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    background-color: #e7e6e6;
+    vertical-align: middle;
+    min-height: 38px; /* hauteur proche d'un input */
+}
+
+.commentaire {
+    font-size: 0.7rem;
+    color: #666;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-style: italic;
+}
+
+.validated::after {
+    content: ' ✓';
+    color: #5cb85c !important;
+}
+
+.validated {
+    color: #5cb85c !important;
+}
+
+.border-right {
+    border-right: 1px solid #ddd;
+}
+
+
+/* style bouton le téléversement d'un fichier document */
+
+.groupe-fichier {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    overflow: hidden;
+    background-color: #fff;
+    max-width: 100%;
+}
+
+/* Le bouton à gauche */
+
+.groupe-fichier button {
+    border: none;
+    border-right: 1px solid #ccc;
+    border-radius: 0;
+    padding: 0.5rem 0.75rem;
+    height: 100%;
+}
+
+/* Le label qui suit */
+
+.groupe-fichier span {
+    padding: 0.5rem 0.75rem;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.9rem;
+}
+
+/* Pour compatibilité avec Bootstrap si utilisé */
+
+.groupe-fichier .texte-muted {
+    color: #6c757d;
+}
+
+
+/* Style pour la zone déposer d'un upload par glisser déposer */
+
+.upload {
+    border: #00469c 1px dashed;
+    margin: 10px;
+    padding: 10px;
+    /* pour centrer verticalement et horizontalement */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #ececec;
+    max-width: 1024px;
+    min-height: 150px;
+}
+
+.upload .content {
+    position: absolute; /* Positionnement absolu pour le contenu */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centrage absolu */
+}
+
+.upload:hover {
+    background-color: #939393;
+    cursor: pointer
+}
+
+.upload img {
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+    margin: auto;
+}
+
+.counter {
+    font-size: 35px;
+    color: #000;
+    text-align: center;
+}
+
+/* Styles pour le menu d'administration */
+
+.admin-card {
+    background: linear-gradient(135deg, #d0e8ff, #90c9ff); /* Bleu clair dégradé */
+    color: #003366;
+    text-align: center;
+    padding: 1rem;
+    border-radius: .91rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-height: 120px;
+    word-break: break-word;
+}
+
+.admin-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    color: #FF0033;
+}
+
+/* personnalisation popover */
+
+.popover-body .contenu-popover {
+    font-size: 0.6rem;
+!important;
+}
+
+.tooltip-inner {
+    font-size: 0.6rem;
+!important;
+}
+
+/* Styles pour le smartphone */
+@media only screen and (max-width: 767px) {
+    .masquer {
+        display: none;
+    }
+
+    .formulaire {
+        width: 100% !important;
+    }
+}
+
+/* Style pour les cadres d'un menu */
+.flex-container {
+    display: flex;
+    flex-wrap: wrap; /* Pour permettre aux éléments de passer à la ligne */
+    gap: 5px; /* Espacement entre les colonnes */
+    margin-right: 5px;
+}
+
+.flex-column {
+    flex-grow: 1;       /* L'élément peut grandir pour occuper l'espace disponible */
+    flex-shrink: 1;     /* L'élément peut rétrécir si l'espace est insuffisant */
+    flex-basis: 45%;    /* La taille de base de l'élément est de 45% de la largeur du conteneur */
+}
+
+@media (max-width: 768px) {
+    .flex-column {
+        flex: 1 1 100%;  /* Sur les petits écrans, les colonnes occuperont toute la largeur */
+    }
+}
+
+
+/* style pour  afficher une liste de liens avec animations */
+/* Style global */
+.liste-links {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.link-item {
+    background-color:#3498db;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.link-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.link {
+    display: block;
+    text-decoration: none;
+    padding: 15px 20px;
+    color: #ecf0f1;
+    font-size: 18px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.link:hover {
+    color: #3498db;
+}
+
+.link-icon {
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+/* Ajouter une animation d'entrée */
+.liste-links {
+    animation: fadeIn 1s ease-out;
+}
+
+/* Animation pour l'apparition des éléments */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Style responsive pour les petits écrans */
+@media (max-width: 767px) {
+    .link {
+        font-size: 16px;
+    }
+}

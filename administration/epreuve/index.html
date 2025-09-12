@@ -1,0 +1,48 @@
+
+<div class="formulaire" style="max-width: 48rem">
+
+    <!-- Étape 1 : Choix de l'épreuve -->
+    <div class="etape" >
+        <label for="saison">Sélectionnez la saison</label>
+        <select class="form-select" id="saison"></select>
+    </div>
+
+    <!-- Étape 2 : Description -->
+    <div class="etape" style="display: none;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0">Épreuve : <span class="saison"></span></h5>
+        </div>
+        <label for="description" class="obligatoire ">Description</label>
+        <textarea id="description" required></textarea>
+    </div>
+
+    <!-- Étape 3 : Dates -->
+    <div class="etape" style="display: none;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0">Épreuve : <span class="saison"></span></h5>
+        </div>
+        <div class="row">
+            <div class="col">
+                <label for="date" class="obligatoire">Date de l'épreuve</label>
+                <input id="date" type="date" required >
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Étape 5 : Résumé -->
+    <div class="etape" style="display: none;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5>Résumé avant modification</h5>
+        </div>
+        <div id="msg" class="m-1 erreur"></div>
+        <ul class="list-group mb-3">
+            <li class="list-group-item"><strong>Épreuve :</strong> <span id="r-epreuve"></span></li>
+            <li class="list-group-item"><strong>Description :</strong> <span id="r-description"></span></li>
+            <li class="list-group-item"><strong>Date de l'épreuve :</strong> <span id="r-date"></span></li>
+        </ul>
+        <div class="d-flex gap-3">
+            <button class="btn btn-success" id="btnModifier">Confirmer la modification</button>
+        </div>
+    </div>
+</div>

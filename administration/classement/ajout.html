@@ -1,0 +1,19 @@
+<div class="formulaire">
+    <div id="msg"></div>
+    <label for="date" class="obligatoire ">Date de l'épreuve</label>
+    <input id='date' type="date" style="width: 180px;" required>
+    <label class='obligatoire ' for="titre">
+        Nom de l'épreuve <span class='commentaire'> (lettres, chiffres, espace de séparation accepté) </span>
+    </label>
+    <input id='titre' type="text"
+           required
+           pattern="^[0-9A-Za-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ](?:[,' \-]?[0-9A-Za-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ])*$"
+           minlength="10">
+    <label for="nomFichier" class='obligatoire'>Fichier PDF</label>
+    <div class="groupe-fichier">
+        <button id="btnFichier" class="btn btn-sm btn-outline-secondary">📁 Choisir un fichier</button>
+        <span id="nomFichier" class="texte-muted ms-2"></span>
+    </div>
+    <input type="file" id="fichier" accept="" style='display: none '>
+    <button id="btnAjouter" class="btn btn-danger">Ajouter</button>
+</div>
