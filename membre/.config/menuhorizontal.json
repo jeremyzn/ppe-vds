@@ -1,0 +1,10 @@
+[
+  {
+    "label": "👤 Profil",
+    "href": "/membre/profil/"
+  },
+  {
+    "label": "📷 Photo",
+    "href": "/membre/photo/"
+  },
+]

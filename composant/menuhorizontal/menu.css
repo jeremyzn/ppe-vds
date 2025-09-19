@@ -1,0 +1,58 @@
+#menuHorizontal {
+    background-color: #FFF;
+    padding: 10px;
+    margin-left: 50px;
+    margin-bottom: 15px;
+}
+
+#menuHorizontal ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap : 10px;
+}
+
+#menuHorizontal li {
+    position: relative;
+}
+
+#menuHorizontal a.actif {
+    color: #ff2f00 !important;
+    font-weight: bold;
+}
+
+/* animation des liens */
+#menuHorizontal a {
+    text-decoration: none;
+    font-style: italic;
+    color: darkblue;
+    position: relative; /* Nécessaire pour que le pseudo-élément se positionne correctement */
+}
+
+#menuHorizontal a::after {
+    content: ""; /* Contenu vide pour générer un pseudo-élément */
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0; /* Commence avec une largeur de 0 */
+    height: 2px; /* Hauteur du trait */
+    background-color: blue; /* Couleur du trait */
+    transition: width 0.3s ease-out; /* Animation pour l'apparition du trait */
+}
+
+#menuHorizontal a:hover::after {
+    width: 100%; /* Largeur du trait au survol */
+}
+
+#menuHorizontal a.actif {
+    color: #ff2f00;
+    font-weight: bold;
+}
+
+/* Optionnel, ajouter un léger changement de couleur au survol pour le texte */
+#menuHorizontal a:hover {
+    color: #ff2f00;
+}
+

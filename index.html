@@ -1,0 +1,61 @@
+<div class="d-flex justify-content-between align-items-center m-2 flex-wrap gap-2">
+    <h1 style="font-size: 1.2rem; margin: 0;" class="masquer">Amicale du Val de Somme – Club de course à pied à
+        Amiens</h1>
+    <div class="btn-group">
+        <button id="btnOuvrirToutes" class="btn btn-sm btn-success">Tout ouvrir</button>
+        <button id="btnFermerToutes" class="btn btn-sm btn-danger">Tout fermer</button>
+    </div>
+</div>
+
+<div class="flex-container">
+    <div class="flex-column">
+        <div class="card mb-1">
+            <div class="card-header entete">Derniers Résultats</div>
+            <div id='detailClassement' style="display: none; padding-bottom:10px"></div>
+        </div>
+
+
+        <div class="card mb-1">
+            <div class="card-header entete">Informations utiles</div>
+            <div class="" style="display: none; padding-bottom:10px">
+                <a class='lien' href="/allure">️Traduire son temps de course en vitesse et en allure</a>
+                <a class='lien' href="/macategorie">Connaitre sa catégorie le jour de la course</a>
+                <a class='lien' href="/categorie">Les catégories</a>
+                <span id="documentPublic"></span>
+            </div>
+        </div>
+    </div>
+    <div class="flex-column">
+        <div class="card mb-1">
+            <div class="card-header entete">Le Club</div>
+            <div class="" style="display: none; padding-bottom:10px">
+                <a class="lien" href="/club">Présentation</a>
+                <span id="documentClub"></span>
+            </div>
+        </div>
+        <div class="card mb-1">
+            <div class="card-header entete">Les 4 saisons</div>
+            <div class="" style="display: none; padding-bottom:10px">
+                <div class="d-flex flex-row justify-content-between">
+                    <div>
+                        <div style="padding-left: 10px;" class="card-text">Prochaine édition :
+                            <span style="color:red" id="dateEpreuve"></span>
+                        </div>
+                        <div id='ouverture' style="padding-left: 10px;" class="card-text"></div>
+                        <span style="color:red" id="lieuEpreuve"></span>
+                        <div id='libelle' style="padding-left: 10px;"></div>
+                        <div id='detailProchaineEdition' style="padding-left: 10px">
+                            <div id="descriptionEpreuve"></div>
+                        </div>
+                    </div>
+                </div>
+                <a class='lien' href="/4saisons">Calendrier, horaires et autres informations à connaitre</a>
+                <span id="document4Saisons"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="py-2">
+    <div id='detailPartenaire' class="d-flex justify-content-evenly "></div>
+</div>

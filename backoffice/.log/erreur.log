@@ -1,0 +1,1 @@
+30/05/2025 11:08:01	insert into classement set date = :date, titre = :titre, fichier = :fichier : SQLSTATE[45000]: <<Unknown error>>: 1644 L'URI du fichier PDF n'est pas valide :la bibliotheque fonction.js.pdf	/ajax/ajouter.php	::1
