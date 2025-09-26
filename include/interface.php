@@ -1,3 +1,6 @@
+<?php
+Structure::verifier();
+?>
 <!DOCTYPE HTML>
 <html lang="fr">
 <head>
@@ -6,10 +9,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="data:,">
     <!-- Script Bootstrap  -->
-    <link rel="stylesheet"  href="/composant/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="/composant/bootstrap/bootstrap.min.css">
     <script src="/composant/bootstrap/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="/css/style.css">
     <?php
+    $mention = Page::getMentions();
+    $politique = Page::getPolitique();
     // récupération du nom du script php appelé afin de charger le fichier js de même nom
     $file = pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME);
     if (is_file("$file.js")) {
@@ -23,19 +28,19 @@
     ?>
 </head>
 <body>
-    <header>
-        <?php require __DIR__ . '/header.php' ?>
-    </header>
-    <main>
-        <?php
-        // chargement de l'interface de la page
-        if (is_file("$file.html")) {
-            require "$file.html";
-        }
-        ?>
-    </main>
-    <footer id="pied">
-        <?php require __DIR__ . '/footer.php' ?>
-    </footer>
+<header>
+    <?php require __DIR__ . '/header.php' ?>
+</header>
+<main>
+    <?php
+    // chargement de l'interface de la page
+    if (is_file("$file.html")) {
+        require "$file.html";
+    }
+    ?>
+</main>
+<footer id="pied">
+    <?php require __DIR__ . '/footer.php' ?>
+</footer>
 </body>
 </html>

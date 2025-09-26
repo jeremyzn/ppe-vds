@@ -137,11 +137,43 @@ function creerCartePhoto(nomFichier) {
     // Insertion de l'image dans le corps de la carte
     corps.appendChild(img);
 
+    // Si mode picker, rendre l'image cliquable pour renvoyer l'URL au parent
+    try {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('picker') === '1') {
+            const btnChoisir = document.createElement('button');
+            btnChoisir.className = 'btn btn-sm btn-primary mt-2';
+            btnChoisir.innerText = 'Choisir';
+            btnChoisir.onclick = () => {
+                const url = lesParametres.repertoire + '/' + nomFichier;
+                sendToParent(url);
+                window.close();
+            };
+            corps.appendChild(btnChoisir);
+            // rendre aussi l'image cliquable
+            img.style.cursor = 'pointer';
+            img.onclick = () => {
+                const url = lesParametres.repertoire + '/' + nomFichier;
+                sendToParent(url);
+                window.close();
+            };
+        }
+    } catch (e) {
+        // ignore
+    }
+
     // Ajout du corps dans la carte
     carte.appendChild(corps);
 
     // Retour de la carte complète prête à être insérée dans le DOM
     return carte;
+}
+
+// Si la photothèque est ouverte en mode picker (pour TinyMCE), permettre la sélection et renvoyer l'URL au parent
+function sendToParent(url) {
+    if (window.opener && !window.opener.closed) {
+        window.opener.postMessage({mceAction: 'insertImage', url: url}, '*');
+    }
 }
 
 

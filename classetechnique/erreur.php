@@ -71,12 +71,12 @@ class Erreur
                 // Si le message ne provient pas d'un déclencheur, on enregistre l'erreur dans le journal
                 Journal::enregistrer($message, 'erreur');
                 $type = 'system';
-                $$message = "Une erreur est survenue, veuillez consulter le journal des erreurs pour en savoir plus";
+                $message = "Une erreur est survenue, veuillez consulter le journal des erreurs pour en savoir plus";
             }
         } elseif ($type === 'system') {
             // Si le type est 'system', on enregistre l'erreur dans le journal
             Journal::enregistrer($message, 'erreur');
-            $$message = "Une erreur est survenue, veuillez consulter le journal des erreurs pour en savoir plus";
+            $message = "Une erreur est survenue, veuillez consulter le journal des erreurs pour en savoir plus";
         }
 
         // Démarrage de la session si elle n'est pas déjà démarrée

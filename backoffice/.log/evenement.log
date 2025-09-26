@@ -1,0 +1,11 @@
+19/09/2025 16:19:39	Téléchargement document id=1, fichier=cahier des charges.pdf	/afficherdocumentinformation.php	::1
+19/09/2025 16:29:38	Téléchargement document id=6, fichier=Mise en placede l'application.pdf	/afficherdocumentinformation.php	::1
+19/09/2025 16:30:59	Téléchargement document id=7, fichier=cahier des charges.pdf	/afficherdocumentinformation.php	::1
+19/09/2025 16:31:31	Téléchargement document id=7, fichier=cahier des charges.pdf	/afficherdocumentinformation.php	::1
+26/09/2025 14:43:13	Téléchargement document id=1, fichier=cahier des charges.pdf	/afficherdocumentinformation.php	::1
+26/09/2025 14:47:24	Téléversement document id=2, fichier=1758890844_38c86e5d1c43_Mise_en_placede_l_application.pdf	/administration/information/ajax/ajouterdocument.php	::1
+26/09/2025 14:47:28	Téléversement document id=3, fichier=1758890848_76f2a830e6ce_cahier_des_charges.pdf	/administration/information/ajax/ajouterdocument.php	::1
+26/09/2025 14:48:00	Suppression fichier 1758890844_38c86e5d1c43_Mise_en_placede_l_application.pdf pour document id=2	/administration/information/ajax/supprimerdocument.php	::1
+26/09/2025 14:48:01	Suppression fichier 1758890848_76f2a830e6ce_cahier_des_charges.pdf pour document id=3	/administration/information/ajax/supprimerdocument.php	::1
+26/09/2025 14:48:17	Téléversement document id=4, fichier=cahier_des_charges_20250926-144817.pdf	/administration/information/ajax/ajouterdocument.php	::1
+26/09/2025 14:49:03	Téléchargement document id=4, fichier=cahier_des_charges_20250926-144817.pdf	/afficherdocumentinformation.php	::1

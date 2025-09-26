@@ -1,1 +1,18 @@
-deny from all
+# Deny direct HTTP access to PDF files in this directory
+# Apache 2.4
+<IfModule mod_authz_core.c>
+	<FilesMatch "\.(?i:pdf)$">
+		Require all denied
+	</FilesMatch>
+</IfModule>
+
+# Apache 2.2 fallback
+<IfModule !mod_authz_core.c>
+	<FilesMatch "\.(?i:pdf)$">
+		Order allow,deny
+		Deny from all
+	</FilesMatch>
+</IfModule>
+
+# Prevent directory listing
+Options -Indexes

@@ -1,0 +1,9 @@
+{
+  "classement": ["id", "date", "titre", "fichier", "nbDemande"],
+  "epreuve": ["saison", "description", "date"],
+  "membre": ["id", "login", "password", "nom", "prenom", "email", "telephone", "photo", "autMail"],
+  "administrateur": ["id"],
+  "fonction": ["repertoire", "nom"],
+  "droit": ["idAdministrateur", "repertoire"],
+  "page": ["id", "nom", "contenu"]
+}

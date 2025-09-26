@@ -13,12 +13,21 @@ $lesClassements = json_encode(Classement::getAll());
 // Prochaine édition des 4 saisons
 $prochaineEdition = json_encode(Epreuve::getProchaineEpreuve());
 
+// Récupération des informations à afficher
+$typeInfos = ["Publique"];
+if (isset($_SESSION['membre'])) {
+    $typeInfos[] = "Privée";
+}
+$lesInformations = json_encode(Information::getAll($typeInfos));
+
 
 // transmission des données à l'interface
+
 $head = <<<HTML
     <script>
         const prochaineEdition = $prochaineEdition;
         const lesClassements = $lesClassements;
+        const lesInformations = $lesInformations;
     </script>
 HTML;
 
