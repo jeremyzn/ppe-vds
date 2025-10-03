@@ -69,7 +69,7 @@ if (typeof lesInformations !== 'undefined' && dernieresNouvelles) {
                 </div>
                 <div class="content-html" style="margin-bottom: 8px;">${info.contenu}</div>
                 <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #dee2e6; padding-top: 6px;">
-                    <small class="text-muted">Par ${info.auteur || '—'}</small>
+                    <small class="text-muted">Publié par ${info.auteur || 'INCONNU'}</small>
                     <div class="doc-actions">`;
             if (info.documents && info.documents.length > 0) {
                 info.documents.forEach(doc => {
