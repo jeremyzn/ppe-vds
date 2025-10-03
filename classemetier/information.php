@@ -29,14 +29,12 @@ class Information extends Table
         // le type
         $input = new InputList();
         $input->Require = true;
-        // InputList expose la propriété Values
         $input->Values = ['Publique', 'Privée'];
         $this->columns['type'] = $input;
 
         // l'auteur
         $input = new InputText();
         $input->Require = true;
-        // si un membre est connecté, renseigner automatiquement l'auteur depuis la session
         if (isset($_SESSION['membre'])) {
             $prenom = $_SESSION['membre']['prenom'] ?? '';
             $nom = $_SESSION['membre']['nom'] ?? '';
@@ -56,14 +54,24 @@ class Information extends Table
         }
         $pdo = Database::getInstance();
         $infos = [];
-        $sql = "SELECT i.*, GROUP_CONCAT(d.id) AS documents
+        $sql = "SELECT i.*, GROUP_CONCAT(CONCAT(d.id, ':', d.fichier) SEPARATOR '|') AS documents
                 FROM information i
                 LEFT JOIN documentinformation d ON d.idInformation = i.id
                 WHERE i.type IN ('" . implode("','", $types) . "')
                 GROUP BY i.id
                 ORDER BY i.id DESC";
         foreach ($pdo->query($sql) as $row) {
-            $row['documents'] = $row['documents'] ? explode(',', $row['documents']) : [];
+            // Parser les documents pour créer un tableau d'objets avec id et fichier
+            $docs = [];
+            if ($row['documents']) {
+                foreach (explode('|', $row['documents']) as $doc) {
+                    if (strpos($doc, ':') !== false) {
+                        list($id, $fichier) = explode(':', $doc, 2);
+                        $docs[] = ['id' => $id, 'fichier' => $fichier];
+                    }
+                }
+            }
+            $row['documents'] = $docs;
             $infos[] = $row;
         }
         return $infos;

@@ -12,24 +12,25 @@
         </div>
     </div>
     <div class="col-5">
-        <div id="detailPanel" class="card" style="display:none; border:1px solid #d6c9f5;">
+        <div id="detailPanel" class="card" style="display:none; border:1px solid #d6c9f5; margin-top: 20px;">
             <div class="card-body">
-                <h6 id="detailTitre">Information : </h6>
-                <p id="detailContenu" style="white-space:pre-wrap;"></p>
-                <button id="btnAttach" class="btn" style="background-color:#f6c544;color:#000;border-radius:6px;">Attacher un document à l'information</button>
+                <h6 id="detailTitre" style="color: #6c5ce7; font-weight: bold;">Information : </h6>
+                <p class="text-muted mb-3"><small>Vous pouvez attacher des documents PDF à cette information. Ils seront affichés sur la page publique.</small></p>
+                <button id="btnAttach" class="btn mb-3" style="background-color:#f6c544;color:#000;border-radius:6px;">Attacher un document à l'information</button>
                 <input type="file" id="attachFichiers" accept="application/pdf" multiple style="display:none;" />
 
                 <div class="mt-3">
-                    <h6>Liste des documents déjà associés à l'information</h6>
+                    <h6 style="font-weight: bold;">Liste des documents déjà associés à l'information</h6>
                     <div class="card" style="border:1px solid #d6e6f2;padding:0.5rem;">
                         <table class="table table-sm mb-0">
                             <thead>
                                 <tr>
-                                    <th style="width:8%">Action</th>
+                                    <th style="width:10%">Action</th>
                                     <th>Fichier</th>
                                 </tr>
                             </thead>
                             <tbody id="tableDocs">
+                                <tr><td colspan="2" class="text-muted text-center"><em>Aucun document pour le moment</em></td></tr>
                             </tbody>
                         </table>
                     </div>

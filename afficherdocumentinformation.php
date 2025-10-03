@@ -6,8 +6,8 @@ require $_SERVER['DOCUMENT_ROOT'] . '/include/autoload.php';
 // Expected usage: afficherdocumentinformation.php?id=123
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if ($id <= 0) {
-    header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request');
-    echo 'Identifiant de document manquant';
+    $_SESSION['erreur']['message'] = 'Identifiant de document manquant';
+    header('Location: /erreur');
     exit;
 }
 
@@ -17,9 +17,8 @@ $stmt = $pdo->prepare('SELECT d.fichier, d.idInformation, i.type FROM documentin
 $stmt->execute([':id' => $id]);
 $doc = $stmt->fetch();
 if (!$doc) {
-    header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
-    echo '<div style="color:red;font-weight:bold">Document introuvable en base de données.</div>';
-    echo '<a href="javascript:history.back()" style="display:block;margin-top:1em">Retour</a>';
+    $_SESSION['erreur']['message'] = 'Document introuvable en base de données.';
+    header('Location: /erreur');
     exit;
 }
 
@@ -36,18 +35,28 @@ $repertoire = $_SERVER['DOCUMENT_ROOT'] . '/data/documentinformation';
 $fichierPhysique = $repertoire . '/' . $doc['fichier'];
 
 if (!is_file($fichierPhysique)) {
-    header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
-    echo '<div style="color:red;font-weight:bold">Fichier PDF introuvable sur le serveur.</div>';
-    echo '<a href="javascript:history.back()" style="display:block;margin-top:1em">Retour</a>';
+    // Supprimer l'entrée en base de données car le fichier n'existe plus
+    $stmtDelete = $pdo->prepare('DELETE FROM documentinformation WHERE id = :id');
+    $stmtDelete->execute([':id' => $id]);
+    
+    // Journaliser la suppression
+    Journal::enregistrer("Suppression automatique du document id=$id (fichier physique introuvable: {$doc['fichier']})", 'evenement');
+    
+    $_SESSION['erreur']['message'] = 'Fichier PDF introuvable sur le serveur. L\'entrée en base de données a été supprimée.';
+    header('Location: /erreur');
     exit;
 }
 
 // Journaliser la consultation
 Journal::enregistrer("Téléchargement document id=$id, fichier={$doc['fichier']}", 'evenement');
 
+// Déterminer si on force le téléchargement ou l'affichage inline
+$forceDownload = isset($_GET['download']) && $_GET['download'] == '1';
+$disposition = $forceDownload ? 'attachment' : 'inline';
+
 // Envoyer les en-têtes et afficher le fichier PDF
 header('Content-Type: application/pdf');
-header('Content-Disposition: inline; filename="' . basename($fichierPhysique) . '"');
+header('Content-Disposition: ' . $disposition . '; filename="' . basename($fichierPhysique) . '"');
 header('Content-Length: ' . filesize($fichierPhysique));
 readfile($fichierPhysique);
 exit;

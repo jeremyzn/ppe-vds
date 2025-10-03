@@ -9,3 +9,18 @@
 26/09/2025 14:48:01	Suppression fichier 1758890848_76f2a830e6ce_cahier_des_charges.pdf pour document id=3	/administration/information/ajax/supprimerdocument.php	::1
 26/09/2025 14:48:17	Téléversement document id=4, fichier=cahier_des_charges_20250926-144817.pdf	/administration/information/ajax/ajouterdocument.php	::1
 26/09/2025 14:49:03	Téléchargement document id=4, fichier=cahier_des_charges_20250926-144817.pdf	/afficherdocumentinformation.php	::1
+03/10/2025 13:46:05	Téléversement document id=5, fichier=Classe_et_objet_20251003-134605.pdf	/administration/information/ajax/ajouterdocument.php	::1
+03/10/2025 13:46:07	Suppression fichier Classe_et_objet_20251003-134605.pdf pour document id=5	/administration/information/ajax/supprimerdocument.php	::1
+03/10/2025 13:46:12	Téléversement document id=6, fichier=La_classe_Article_20251003-134612.pdf	/administration/information/ajax/ajouterdocument.php	::1
+03/10/2025 13:46:18	Téléchargement document id=6, fichier=La_classe_Article_20251003-134612.pdf	/afficherdocumentinformation.php	::1
+03/10/2025 13:46:44	Téléversement document id=7, fichier=Principes_de_la_programmation_objet_20251003-134644.pdf	/administration/information/ajax/ajouterdocument.php	::1
+03/10/2025 13:55:35	Téléversement document id=8, fichier=Les_tests_unitaires_20251003-135535.pdf	/administration/information/ajax/ajouterdocument.php	::1
+03/10/2025 14:03:02	Téléversement document id=9, fichier=Principes_de_la_programmation_objet_20251003-140302.pdf	/administration/information/ajax/ajouterdocument.php	::1
+03/10/2025 14:04:47	Téléchargement document id=9, fichier=Principes_de_la_programmation_objet_20251003-140302.pdf	/afficherdocumentinformation.php	::1
+03/10/2025 14:05:01	Suppression fichier Principes_de_la_programmation_objet_20251003-140302.pdf pour document id=9	/administration/information/ajax/supprimerdocument.php	::1
+03/10/2025 14:05:14	Téléversement document id=10, fichier=Principes_de_la_programmation_objet_20251003-140514.pdf	/administration/information/ajax/ajouterdocument.php	::1
+03/10/2025 14:05:16	Téléchargement document id=10, fichier=Principes_de_la_programmation_objet_20251003-140514.pdf	/afficherdocumentinformation.php	::1
+03/10/2025 14:05:24	Suppression fichier Principes_de_la_programmation_objet_20251003-140514.pdf pour document id=10	/administration/information/ajax/supprimerdocument.php	::1
+03/10/2025 14:05:26	Téléversement document id=11, fichier=Les_tests_unitaires_20251003-140526.pdf	/administration/information/ajax/ajouterdocument.php	::1
+03/10/2025 14:05:28	Téléchargement document id=11, fichier=Les_tests_unitaires_20251003-140526.pdf	/afficherdocumentinformation.php	::1
+03/10/2025 14:05:38	Suppression automatique du document id=11 (fichier physique introuvable: Les_tests_unitaires_20251003-140526.pdf)	/afficherdocumentinformation.php	::1

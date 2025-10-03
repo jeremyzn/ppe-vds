@@ -15,7 +15,6 @@ const contenu = document.getElementById('contenu');
 const type = document.getElementById('type');
 const detailPanel = document.getElementById('detailPanel');
 const detailTitre = document.getElementById('detailTitre');
-const detailContenu = document.getElementById('detailContenu');
 const btnAttach = document.getElementById('btnAttach');
 const attachFichiers = document.getElementById('attachFichiers');
 const tableDocs = document.getElementById('tableDocs');
@@ -25,19 +24,27 @@ let editionId = 0;
 btnAjouter.onclick = () => {
     formulaire.style.display = 'block';
     btnAjouter.style.display = 'none';
+    detailPanel.style.display = 'none'; // Masquer le panneau lors d'un ajout
     resetForm();
 };
 
 btnAnnuler.onclick = () => {
     formulaire.style.display = 'none';
     btnAjouter.style.display = 'inline-block';
+    detailPanel.style.display = 'none';
+    resetForm();
 };
 
 function resetForm() {
     editionId = 0;
     titre.value = '';
-    contenu.value = '';
+    if (window.tinymce && tinymce.get('contenu')) {
+        tinymce.get('contenu').setContent('');
+    } else {
+        contenu.value = '';
+    }
     type.value = 'Publique';
+    tableDocs.innerHTML = '';
 }
 
 function afficherLesInfos(data) {
@@ -76,24 +83,6 @@ function afficherLesInfos(data) {
     });
 }
 
-function showDetail(id) {
-    const info = lesInfos.find(i => String(i.id) === String(id));
-    if (!info) return;
-    editionId = id;
-    detailTitre.innerText = `Information : ${info.titre}`;
-    // afficher le contenu en HTML pour que les images et la mise en forme soient visibles
-    detailContenu.innerHTML = info.contenu || '';
-    detailPanel.style.display = 'block';
-    // récupérer les documents
-    appelAjax({
-        url: 'ajax/getdocuments.php',
-        data: { idInformation: id },
-        success: (docs) => {
-            afficherDocs(docs, id);
-        }
-    });
-}
-
 // ouvre le formulaire d'édition et pré-remplit les champs (prend en charge TinyMCE)
 function editInfo(id) {
     const info = lesInfos.find(i => String(i.id) === String(id));
@@ -108,6 +97,11 @@ function editInfo(id) {
     }
     formulaire.style.display = 'block';
     btnAjouter.style.display = 'none';
+    
+    // Afficher le panneau de détail pour la gestion des documents
+    detailTitre.innerText = `Information : ${info.titre}`;
+    detailPanel.style.display = 'block';
+    
     // charger les documents associés
     appelAjax({
         url: 'ajax/getdocuments.php',
@@ -120,36 +114,58 @@ function editInfo(id) {
 
 function afficherDocs(docs, idInformation) {
     tableDocs.innerHTML = '';
-    for (const d of docs) {
+    
+    if (!docs || docs.length === 0) {
         const tr = document.createElement('tr');
-        const tdAction = document.createElement('td');
-        const tdFile = document.createElement('td');
-
-        const del = document.createElement('span');
-        del.innerText = '✘';
-        del.style.color = 'red';
-        del.style.cursor = 'pointer';
-        del.onclick = () => {
-            confirmer(() => {
-                appelAjax({
-                    url: 'ajax/supprimerdocument.php',
-                    data: { id: d.id },
-                    success: () => {
-                        afficherToast('Document supprimé');
-                        showDetail(idInformation);
-                    }
-                });
-            });
-        };
-
-        tdAction.appendChild(del);
-        const txt = document.createElement('span');
-        txt.innerText = d.fichier;
-        tdFile.appendChild(txt);
-
-        tr.appendChild(tdAction);
-        tr.appendChild(tdFile);
+        const td = document.createElement('td');
+        td.colSpan = 2;
+        td.className = 'text-muted text-center';
+        td.innerHTML = '<em>Aucun document pour le moment</em>';
+        tr.appendChild(td);
         tableDocs.appendChild(tr);
+    } else {
+        for (const d of docs) {
+            const tr = document.createElement('tr');
+            const tdAction = document.createElement('td');
+            const tdFile = document.createElement('td');
+
+            const del = document.createElement('span');
+            del.innerText = '✘';
+            del.style.color = 'red';
+            del.style.cursor = 'pointer';
+            del.style.fontWeight = 'bold';
+            del.title = 'Supprimer ce document';
+            del.onclick = () => {
+                confirmer(() => {
+                    appelAjax({
+                        url: 'ajax/supprimerdocument.php',
+                        data: { id: d.id },
+                        success: () => {
+                            afficherToast('Document supprimé');
+                            // Recharger les documents
+                            appelAjax({
+                                url: 'ajax/getdocuments.php',
+                                data: { idInformation: idInformation },
+                                success: (docs) => {
+                                    afficherDocs(docs, idInformation);
+                                }
+                            });
+                        }
+                    });
+                });
+            };
+
+            tdAction.appendChild(del);
+            tdAction.style.textAlign = 'center';
+            
+            const txt = document.createElement('span');
+            txt.innerText = d.fichier;
+            tdFile.appendChild(txt);
+
+            tr.appendChild(tdAction);
+            tr.appendChild(tdFile);
+            tableDocs.appendChild(tr);
+        }
     }
 
     // attachement
@@ -164,7 +180,16 @@ function afficherDocs(docs, idInformation) {
                 data: fd,
                 success: () => {
                     afficherToast('Documents ajoutés');
-                    showDetail(editionId);
+                    // Recharger les documents
+                    appelAjax({
+                        url: 'ajax/getdocuments.php',
+                        data: { idInformation: editionId },
+                        success: (docs) => {
+                            afficherDocs(docs, editionId);
+                        }
+                    });
+                    // Réinitialiser le champ fichier
+                    attachFichiers.value = '';
                 }
             });
         }
@@ -204,8 +229,20 @@ btnEnregistrer.onclick = () => {
         url: '/ajax/ajouter.php',
         data: fd,
         success: (data) => {
-            afficherToast('Information ajoutée');
-            location.reload();
+            // Vérifier si on a un ID de retour (succès)
+            if (data && data.success) {
+                afficherToast('Information ajoutée avec succès. Vous pouvez maintenant attacher des documents.');
+                // Mettre à jour editionId avec le nouvel ID
+                editionId = data.success;
+                // Afficher le panneau de détail pour permettre l'ajout de documents
+                detailTitre.innerText = `Information : ${titre.value}`;
+                detailPanel.style.display = 'block';
+                // Charger les documents (vide pour l'instant)
+                afficherDocs([], editionId);
+            } else {
+                afficherToast('Information ajoutée');
+                setTimeout(() => location.reload(), 1500);
+            }
         }
     });
 };

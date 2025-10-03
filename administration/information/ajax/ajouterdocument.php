@@ -29,7 +29,18 @@ $tailleMax = 10 * 1024 * 1024;
 foreach ($_FILES['fichiers']['error'] as $index => $error) {
     $originalName = $_FILES['fichiers']['name'][$index] ?? '';
     if ($error !== UPLOAD_ERR_OK) {
-        $errors[] = "Fichier '$originalName' non reçu (code $error)";
+        // Messages d'erreur plus explicites
+        $errorMessages = [
+            UPLOAD_ERR_INI_SIZE => "dépasse la limite du serveur (upload_max_filesize dans php.ini)",
+            UPLOAD_ERR_FORM_SIZE => "dépasse la limite du formulaire",
+            UPLOAD_ERR_PARTIAL => "n'a été que partiellement téléversé",
+            UPLOAD_ERR_NO_FILE => "n'a pas été téléversé",
+            UPLOAD_ERR_NO_TMP_DIR => "répertoire temporaire manquant",
+            UPLOAD_ERR_CANT_WRITE => "échec d'écriture sur le disque",
+            UPLOAD_ERR_EXTENSION => "bloqué par une extension PHP"
+        ];
+        $errorMsg = $errorMessages[$error] ?? "erreur inconnue (code $error)";
+        $errors[] = "Fichier '$originalName' : $errorMsg";
         continue;
     }
 
@@ -41,7 +52,9 @@ foreach ($_FILES['fichiers']['error'] as $index => $error) {
 
     // contrôle taille
     if ($_FILES['fichiers']['size'][$index] > $tailleMax) {
-        $errors[] = "Fichier '$originalName' trop volumineux";
+        $tailleEnMo = round($_FILES['fichiers']['size'][$index] / (1024 * 1024), 2);
+        $limiteEnMo = round($tailleMax / (1024 * 1024), 2);
+        $errors[] = "Fichier '$originalName' trop volumineux ({$tailleEnMo} Mo, limite: {$limiteEnMo} Mo)";
         continue;
     }
 

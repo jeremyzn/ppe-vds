@@ -709,13 +709,11 @@ output {
 /* personnalisation popover */
 
 .popover-body .contenu-popover {
-    font-size: 0.6rem;
-!important;
+    font-size: 0.6rem !important;
 }
 
 .tooltip-inner {
-    font-size: 0.6rem;
-!important;
+    font-size: 0.6rem !important;
 }
 
 /* Styles pour le smartphone */
