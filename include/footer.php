@@ -1,8 +1,8 @@
 <?php
-// récupération du contenu de la page mentions légales et de la politique de confidentialité
-// pour l'affichage dans le pied de page
-$mention = Page::getMentions();
-$politique = Page::getPolitique();
+
+global $mention;
+global $politique;
+
 ?>
 
 <a class="masquer" id="lienMentions" href="#" data-bs-toggle="modal" data-bs-target="#modalMentions">

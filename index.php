@@ -14,6 +14,12 @@ $lesClassements = json_encode(Classement::getAll());
 $prochaineEdition = json_encode(Epreuve::getProchaineEpreuve());
 
 
+// récupération du contenu de la page mentions légales et de la politique de confidentialité
+// pour l'affichage dans le pied de page
+$mention = Page::getMentions();
+$politique = Page::getPolitique();
+
+
 // transmission des données à l'interface
 $head = <<<HTML
     <script>

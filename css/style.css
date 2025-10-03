@@ -1,7 +1,7 @@
 /* ------------------------------------------------------------
    Feuille de style globale
-   Mise à jour : 4 septembre 2025
-   Version : 2025.4
+   Mise à jour : 3 octobre 2025
+   Version : 2025.8
 ------------------------------------------------------------ */
 
 /*
@@ -49,7 +49,7 @@ html, body — Définissent le comportement global de la page HTML
 */
 html,
 body {
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'PT Serif', serif;
     height: 100%;
     font-weight: 400;
     overflow-x: hidden; /* Empêche le scroll horizontal */
@@ -75,7 +75,7 @@ main {
     display: flex;
     flex-direction: column;
     margin: 0;
-	padding-left : 5px;
+    padding: 5px;
 }
 
 /*
@@ -102,8 +102,11 @@ header {
     color: var(--text-color-header);
     background-color: var(--background-color-header);
     width: 100%;
-    min-height: 50px;
+    min-height: 60px;
     padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 /*
@@ -340,7 +343,6 @@ label {
 
 input, textarea {
     border: 1px solid lightgray;
-
     border-radius: 0;
     color: #0f7df5;
     outline: 0;
@@ -356,22 +358,22 @@ input[type=date] {
 }
 
 input:disabled, select:disabled {
-    border: 0 solid;
+    border: 1px solid lightgray;
     border-radius: 0;
+    cursor: not-allowed;
 }
 
 input:focus, select:focus {
-    border: 0;
-    border: 1px solid dodgerblue;
-    background-color: #f0f0f0;
+    border: 2px solid dodgerblue;
+    background-color: #fcfcfc;
     border-radius: 0;
     outline: 0;
     box-shadow: 0 0 0 0;
 }
 
 textarea:focus {
-    border: 1px solid dodgerblue;
-    background-color: #f0f0f0;
+    border: 2px solid dodgerblue;
+    background-color: #fcfcfc;
     outline: 0;
     box-shadow: 0 0 0 0;
 }
@@ -437,7 +439,6 @@ select {
     display: flex;
     flex-direction: column;
     gap: 5px;
-    max-width: 720px; /* Largeur maximale pour garder le responsive */
 }
 
 /* style pour un champ de recherche fusionné avec son label  */
@@ -459,7 +460,10 @@ select {
     max-width: 350px;
     padding: 0.4rem 0.6rem;
     font-size: 1rem;
-    border-bottom: 1px solid var(--border-color-table);
+}
+
+.form-recherche input:focus {
+    background-color: #fcfcfc;
 }
 
 .form-recherche input::placeholder {
@@ -637,7 +641,7 @@ output {
 /* Style pour la zone déposer d'un upload par glisser déposer */
 
 .upload {
-    border: #00469c 1px dashed;
+    border: #00469c 2px dashed;
     margin: 10px;
     padding: 10px;
     /* pour centrer verticalement et horizontalement */
@@ -645,7 +649,7 @@ output {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: #ececec;
+    background-color: #fefefe;
     max-width: 1024px;
     min-height: 150px;
 }
@@ -658,7 +662,7 @@ output {
 }
 
 .upload:hover {
-    background-color: #939393;
+    background-color: #fcfcfc;
     cursor: pointer
 }
 
@@ -734,37 +738,35 @@ output {
 }
 
 .flex-column {
-    flex-grow: 1;       /* L'élément peut grandir pour occuper l'espace disponible */
-    flex-shrink: 1;     /* L'élément peut rétrécir si l'espace est insuffisant */
-    flex-basis: 45%;    /* La taille de base de l'élément est de 45% de la largeur du conteneur */
+    flex-grow: 1; /* L'élément peut grandir pour occuper l'espace disponible */
+    flex-shrink: 1; /* L'élément peut rétrécir si l'espace est insuffisant */
+    flex-basis: 45%; /* La taille de base de l'élément est de 45% de la largeur du conteneur */
 }
 
 @media (max-width: 768px) {
     .flex-column {
-        flex: 1 1 100%;  /* Sur les petits écrans, les colonnes occuperont toute la largeur */
+        flex: 1 1 100%; /* Sur les petits écrans, les colonnes occuperont toute la largeur */
     }
 }
 
 
-/* style pour  afficher une liste de liens avec animations */
+/* Style pour afficher une liste de liens avec animations */
 /* Style global */
 .liste-links {
     display: flex;
-    flex-direction: column;
-    gap: 15px;
+    flex-wrap: wrap; /* Permet de faire un retour à la ligne lorsque l'espace est insuffisant */
+    gap: 15px; /* Espace entre les éléments */
 }
 
 .link-item {
-    background-color:#3498db;
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 48%; /* Par défaut, chaque élément prend 48% de la largeur (2 par ligne sur les grands écrans) */
 }
 
 .link-item:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
 }
 
 .link {
@@ -778,7 +780,7 @@ output {
 }
 
 .link:hover {
-    color: #3498db;
+    color: transparent;
 }
 
 .link-icon {
@@ -804,8 +806,12 @@ output {
 }
 
 /* Style responsive pour les petits écrans */
-@media (max-width: 767px) {
+@media (max-width: 1056px) {
+    .link-item {
+        width: 100%; /* Sur les écrans mobiles, chaque élément prend toute la largeur */
+    }
+
     .link {
-        font-size: 16px;
+        font-size: 16px; /* Réduire la taille de la police sur les petits écrans */
     }
 }

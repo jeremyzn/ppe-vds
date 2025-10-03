@@ -16,7 +16,11 @@
     "href": "/backoffice/droit"
   },
   {
+    "label": "Document",
+    "href": "/backoffice/document"
+  },
+  {
     "label": "Déconnexion",
     "href": "/backoffice/deconnexion.php"
   }
-]
+    ]

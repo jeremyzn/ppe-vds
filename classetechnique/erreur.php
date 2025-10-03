@@ -64,6 +64,9 @@ class Erreur
         if ($type === null) {
             // si le message provient d'un déclencheur il doit contenir un ~ et dans ce cas, il peut être affiché
             $messageDeclencheur = strstr($message, '');
+        } elseif ($type === 'system') {
+            // Si le type est 'system', on enregistre l'erreur dans le journal
+            Journal::enregistrer($message, 'erreur');
             if ($messageDeclencheur) {
                 $type = 'global';
                 $message = substr($messageDeclencheur, 1);
@@ -71,12 +74,9 @@ class Erreur
                 // Si le message ne provient pas d'un déclencheur, on enregistre l'erreur dans le journal
                 Journal::enregistrer($message, 'erreur');
                 $type = 'system';
-                $$message = "Une erreur est survenue, veuillez consulter le journal des erreurs pour en savoir plus";
+                $message = "Une erreur est survenue, veuillez consulter le journal des erreurs pour en savoir plus";
             }
-        } elseif ($type === 'system') {
-            // Si le type est 'system', on enregistre l'erreur dans le journal
-            Journal::enregistrer($message, 'erreur');
-            $$message = "Une erreur est survenue, veuillez consulter le journal des erreurs pour en savoir plus";
+            $message = "Une erreur est survenue, veuillez consulter le journal des erreurs pour en savoir plus";
         }
 
         // Démarrage de la session si elle n'est pas déjà démarrée
@@ -117,7 +117,7 @@ class Erreur
             strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
     }
 
-    /**
+    /**1
      * Blocage IP et session, redirection vers la page d'erreur
      */
     public static function bloquerVisiteur(): void

@@ -1,3 +1,13 @@
+<?php
+Structure::verifier();
+
+// récupération du contenu de la page mentions légales et de la politique de confidentialité
+// pour l'affichage dans le pied de page
+$mention = Page::getMentions();
+$politique = Page::getPolitique();
+
+?>
+
 <!DOCTYPE HTML>
 <html lang="fr">
 <head>
