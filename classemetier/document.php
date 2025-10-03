@@ -10,9 +10,9 @@ declare(strict_types=1);
 
 class Document extends table
 {
-    public function __construct($param)
+    public function __construct()
     {
-        parent::__construct($param);
+        parent::__construct('document');
     }
 
     public function getAll(): array
