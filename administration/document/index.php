@@ -1,16 +1,12 @@
 <?php
-require $_SERVER['DOCUMENT_ROOT'] . '/include/autoload.php';
-$titre = "Suppression d'un document";
+// récupération des documents
+$lesDocuments = json_encode(Document::getAll());
+$head = <<<HTML
+<script >
+    const lesDocuments = $lesDocuments;
+</script>
+HTML;
 
-// Création de l'instance
-$document = new Document();
-// Appel de la méthode d'instance
-$LesDocuments = json_encode($document->getAll());
 
-$head = <<<EOD
-    <script>
-        const LesDocuments = $LesDocuments;
-    </script>
-EOD;
-
-require RACINE . "/include/interface.php";
+// chargement interface
+require RACINE . '/include/interface.php';
