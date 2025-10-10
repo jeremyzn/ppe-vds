@@ -16,7 +16,7 @@ $lesParametres = Membre::getConfig();
 $repertoire = $lesParametres['repertoire'];
 
 // instanciation et paramétrage d'un objet InputFile
-$file = new InputFileImg($lesParametres);
+$file = new InputFileImg($_FILES['fichier'], $lesParametres);
 
 // contrôle de l'objet $file
 if (!$file->checkValidity()) {

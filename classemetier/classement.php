@@ -73,10 +73,9 @@ class Classement extends Table
         $input->SupprimerEspaceSuperflu = true;
         $this->columns['titre'] = $input;
 
-        // Validation du fichier uploadé
-        // Utilise les paramètres définis dans self::CONFIG pour la configuration
-        $input = new InputFile(self::CONFIG);
-        // Construction du chemin absolu pour le stockage des fichiers
+        //  fichier uploadé
+        $input = new InputText();
+        $input->Require = false;
         $this->columns['fichier'] = $input;
 
         // Colonnes pouvant être modifiées unitairement (ex: via interface AJAX)
@@ -172,19 +171,30 @@ SQL;
     }
 
     /**
-     * Récupère la liste des fichiers avec leur nombre de demandes (statistiques)
-     *
-     * @return array<int, array{nom: string, nb: int}>
+     * Supprime le fichier PDF associé au document
+     * @param string $fichier
+     * @return void
      */
-    public static function getNbDemande(): array
+    public static function supprimerFichier(string $fichier): void
     {
-        $sql = <<<SQL
-            select fichier as nom, nbDemande as nb
-            from classement
-            order by date desc;
-SQL;
-        $select = new Select();
-        return $select->getRows($sql);
+        $chemin = self::DIR . '/' . $fichier;
+        if (is_file($chemin)) {
+            unlink($chemin);
+        }
+    }
+
+    /**
+     * Supprime un enregistrement de la table document
+     * @param int $id
+     * @return void
+     */
+    public static function supprimer(int $id): void
+    {
+        $db = Database::getInstance();
+        $sql = "delete from classement  where id = :id;";
+        $cmd = $db->prepare($sql);
+        $cmd->bindValue('id', $id);
+        $cmd->execute();
     }
 
     /**

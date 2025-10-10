@@ -8,7 +8,7 @@ import {appelAjax} from "/composant/fonction/ajax.js";
 import {confirmer, messageBox, corriger} from "/composant/fonction/afficher.js";
 import {
     fichierValide, effacerLesErreurs,
-    creerBoutonSuppression, creerBoutonModification, creerBoutonRemplacer
+    creerBoutonSuppression, creerBoutonRemplacer
 
 } from "/composant/fonction/formulaire.js";
 
