@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 /**
  * Classe gérant les informations publiées sur le site
  * Gestion de la table 'information' avec les colonnes :
@@ -48,22 +48,41 @@ class Information extends Table
      * @param array $types Types d'informations à récupérer
      * @return array Tableau des informations avec leurs documents associés
      */
-    public static function getAll($types = ["Publique"]) {
+    public static function getAll(array $types = ["Publique"]): array
+    {
         if (empty($types)) {
             $types = ["Publique"];
         }
-        $pdo = Database::getInstance();
-        $infos = [];
+
+        $db = Database::getInstance();
+
+        $placeholders = [];
+        $params = [];
+        foreach ($types as $i => $t) {
+            $key = 't' . $i;
+            $placeholders[] = ':' . $key;
+            $params[$key] = $t;
+        }
+        $in = implode(',', $placeholders);
+
         $sql = "SELECT i.*, GROUP_CONCAT(CONCAT(d.id, ':', d.fichier) SEPARATOR '|') AS documents
                 FROM information i
                 LEFT JOIN documentinformation d ON d.idInformation = i.id
-                WHERE i.type IN ('" . implode("','", $types) . "')
+                WHERE i.type IN (" . $in . ")
                 GROUP BY i.id
                 ORDER BY i.id DESC";
-        foreach ($pdo->query($sql) as $row) {
-            // Parser les documents pour créer un tableau d'objets avec id et fichier
+
+        $stmt = $db->prepare($sql);
+        foreach ($params as $k => $v) {
+            $stmt->bindValue($k, $v);
+        }
+        $stmt->execute();
+
+        $infos = [];
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($rows as $row) {
             $docs = [];
-            if ($row['documents']) {
+            if (!empty($row['documents'])) {
                 foreach (explode('|', $row['documents']) as $doc) {
                     if (strpos($doc, ':') !== false) {
                         list($id, $fichier) = explode(':', $doc, 2);

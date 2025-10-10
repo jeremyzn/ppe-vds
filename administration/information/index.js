@@ -24,7 +24,7 @@ let editionId = 0;
 btnAjouter.onclick = () => {
     formulaire.style.display = 'block';
     btnAjouter.style.display = 'none';
-    detailPanel.style.display = 'none'; // Masquer le panneau lors d'un ajout
+    detailPanel.style.display = 'none';
     resetForm();
 };
 

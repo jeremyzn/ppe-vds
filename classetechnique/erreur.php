@@ -63,7 +63,7 @@ class Erreur
         // Si le type n'est pas précisé, on tente de le déduire du message
         if ($type === null) {
             // si le message provient d'un déclencheur il doit contenir un ~ et dans ce cas, il peut être affiché
-            $messageDeclencheur = strstr($message, '');
+            $messageDeclencheur = strstr($message, '~');
             if ($messageDeclencheur) {
                 $type = 'global';
                 $message = substr($messageDeclencheur, 1);

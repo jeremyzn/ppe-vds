@@ -1,7 +1,9 @@
 "use strict";
 
-// Version 2025.3
-// Date version : 02/09/2025
+// Version 2025.4
+// Date version : 04/10/2025
+
+// Modification de la fonction getAge pour accepter le format MySQL ou le format français
 
 /**
  * retourne la date courante dans le format aaaa-mm-jj
@@ -148,24 +150,32 @@ export function getDateRelative(unite, delta) {
  * @returns {number}
  */
 export function getAge(dateNaissance) {
-    // Séparer la date en jour, mois et année
-    const dateParts = dateNaissance.split('/');
-    const day = parseInt(dateParts[0], 10);
-    const month = parseInt(dateParts[1], 10) - 1; // Les mois dans JavaScript commencent à 0 (janvier est 0)
-    const year = parseInt(dateParts[2], 10);
+    let birthDate;
 
-    const birthDate = new Date(year, month, day);
+    if (dateNaissance.includes('/')) {
+        // Format français : DD/MM/YYYY
+        const [day, month, year] = dateNaissance.split('/').map(Number);
+        birthDate = new Date(year, month - 1, day);
+    } else if (dateNaissance.includes('-')) {
+        // Format MySQL : YYYY-MM-DD ou YYYY-MM-DD HH:MM:SS
+        const dateOnly = dateNaissance.split(' ')[0]; // On prend juste la partie date
+        const [year, month, day] = dateOnly.split('-').map(Number);
+        birthDate = new Date(year, month - 1, day);
+    } else {
+        return 0;
+    }
+
     const currentDate = new Date();
 
-    // Comparer les mois et jours
-    const hasBirthdayOccurred = (
+    // Comparer mois/jours pour savoir si l’anniversaire est passé
+    const hasBirthdayOccurred =
         currentDate.getMonth() > birthDate.getMonth() ||
-        (currentDate.getMonth() === birthDate.getMonth() && currentDate.getDate() >= birthDate.getDate())
-    );
+        (currentDate.getMonth() === birthDate.getMonth() && currentDate.getDate() >= birthDate.getDate());
 
-    // Calculer l'âge en fonction de la comparaison
+    // Calculer l’âge
     return currentDate.getFullYear() - birthDate.getFullYear() - (hasBirthdayOccurred ? 0 : 1);
 }
+
 
 /**
  * déterminer l'année de référence pour une saison spécifique (l'année scolaire ou universitaire qui commence en septembre par exemple).
