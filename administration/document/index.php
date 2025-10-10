@@ -1,4 +1,7 @@
 <?php
+
+require $_SERVER['DOCUMENT_ROOT'] . '/include/autoload.php';
+
 // récupération des documents
 $lesDocuments = json_encode(Document::getAll());
 $head = <<<HTML
