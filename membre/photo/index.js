@@ -32,7 +32,7 @@ cible.onclick = () => fichier.click();
 fichier.onchange = () => {
     if (fichier.files.length > 0) {
         let file = fichier.files[0];
-        if (controlerFichier(file)) {
+        if (fichierValide(file, lesParametres)) {
             ajouter(file);
         }
     }
@@ -43,31 +43,19 @@ cible.ondragover = (e) => e.preventDefault();
 cible.ondrop = (e) => {
     e.preventDefault();
     let file = e.dataTransfer.files[0];
-    if (controlerFichier(file)) {
+    if (fichierValide(file, lesParametres)) {
         ajouter(file);
     }
 };
 
 // suppression de la photo
-btnSupprimer.onclick = () => {
-    supprimer();
-};
+btnSupprimer.onclick = supprimer;
+
+
 
 // -----------------------------------------------------------------------------------
 // Fonctions de traitement
 // -----------------------------------------------------------------------------------
-
-/**
- * Traite le fichier sélectionné ou déposé
- * @param {File} file - Le fichier à contrôler
- */
-function controlerFichier(file) {
-    // Vérification de taille et d'extension
-    // on ne vérifie les dimensions car la photo sera automatiquement redimensionnée
-    if (fichierValide(file, lesParametres)) {
-        ajouter(file);
-    }
-}
 
 /**
  * Ajoute la photo sélectionnée ou déposée
@@ -106,7 +94,7 @@ function supprimer() {
     appelAjax({
         url: 'ajax/supprimer.php',
         success: () => {
-            // il faut afficher le bouton pour supprimer la photo
+            // il faut masquer  le bouton pour supprimer la photo
             btnSupprimer.style.display = 'none';
             // effacer la photo
             cible.innerHTML = '';

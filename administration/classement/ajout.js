@@ -85,13 +85,11 @@ function controlerFichier(file) {
  */
 function ajouter() {
     let formData = new FormData();
-    formData.append('table', 'classement');
     formData.append('fichier', leFichier);
     formData.append('titre', titre.value);
     formData.append('date', date.value);
     appelAjax({
-        url: '/ajax/ajouter.php',
-        method: 'POST',
+        url: 'ajax/ajouter.php',
         data: formData,
         success: () => {
                 retournerVers("Classement ajouté", '.');
@@ -109,6 +107,9 @@ filtrerLaSaisie('titre', /[0-9A-Za-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚ
 
 const max = getDateRelative("annee", 0); // aujourd'hui
 configurerDate(date, {max: max, valeur: max});
+
+// initialisation des données sur l'interface
+fichier.accept = lesParametres.accept;
 
 let label = document.querySelector(`label[for="nomFichier"]`);
 label.innerText = lesParametres.label;

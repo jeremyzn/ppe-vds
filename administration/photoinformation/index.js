@@ -5,13 +5,8 @@
 // -----------------------------------------------------------------------------------
 
 import {appelAjax} from "/composant/fonction/ajax.js";
-import {
-    configurerFormulaire,
-    effacerLesErreurs,
-    fichierValide,
-    verifierDimensionsImage,
-} from "/composant/fonction/formulaire.js";
-import {afficherSousLeChamp, afficherToast, confirmer} from "/composant/fonction/afficher";
+import {configurerFormulaire, effacerLesErreurs, fichierValide, verifierDimensionsImage, creerBoutonSuppression} from "/composant/fonction/formulaire.js";
+import {afficherToast, confirmer} from "/composant/fonction/afficher";
 
 // -----------------------------------------------------------------------------------
 // Déclaration des variables globales
@@ -96,16 +91,8 @@ function creerCartePhoto(nomFichier) {
     entete.classList.add("card-header");
 
     // Création du bouton ✘ pour supprimer l'image
-    const btnSupprimer = document.createElement('span');
-    btnSupprimer.textContent = '✘'; // Icône de suppression
-    btnSupprimer.title = 'Supprimer le fichier'; // Info-bulle
-    btnSupprimer.style.color = 'red';
-    btnSupprimer.style.cursor = 'pointer';
+    const btnSupprimer = creerBoutonSuppression(() => confirmer(() => supprimer(nomFichier)));
     btnSupprimer.classList.add('float-end'); // Positionné à droite
-    btnSupprimer.onclick = () => {
-        // Lorsqu'on clique, demande de confirmation avant suppression
-        confirmer(() => supprimer(nomFichier));
-    };
 
     // Création d'un élément pour afficher le nom du fichier dans l'entête
     const nom = document.createElement('div');
@@ -144,13 +131,27 @@ function creerCartePhoto(nomFichier) {
     return carte;
 }
 
-
+/**
+ * Contrôle le fichier sélectionné au niveau de son extension, de sa taille et de ses dimensions
+ * Affiche un message d'erreur sous le champ fichier si le fichier n'est pas valide
+ * Si le fichier est valide, lance la procédure d'ajout
+ * @param file
+ */
 function controlerFichier(file) {
+    // Efface les erreurs précédentes
+    effacerLesErreurs();
     // Vérification de taille et d'extension
     if (!fichierValide(file, lesParametres)) {
         return;
     }
-    ajouter(file);
+
+    // si le redimensionnement est demandé, on ne vérifie pas les dimensions
+    if (lesParametres.redimensionner) {
+        ajouter(file);
+    } else {
+        // sinon on vérifie les dimensions
+        verifierDimensionsImage(file, lesParametres, () => ajouter(file));
+    }
 }
 
 /**

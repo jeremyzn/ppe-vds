@@ -1,58 +1,66 @@
+/* ====== Menu horizontal ====== */
 #menuHorizontal {
-    background-color: #FFF;
-    padding: 10px;
-    margin-left: 50px;
-    margin-bottom: 15px;
+    background-color: #ffffff;
+    padding: 10px 20px;
+    margin: 0;                      /* supprime la marge gauche */
+    margin-left: 40px;          /* décale le menu vers la droite */
+    margin-right: 40px;
+    border-radius: 0;               /* pleine largeur = pas besoin d’arrondi global */
+    max-width: 1024px;
 }
 
+/* ====== Liste ====== */
 #menuHorizontal ul {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
     flex-wrap: wrap;
-    gap : 10px;
+    justify-content: flex-start;        /* ou "flex-start" si tu veux aligner à gauche */
+    gap: 12px;
+    width: 100%;
 }
 
+/* ====== Éléments du menu ====== */
 #menuHorizontal li {
-    position: relative;
+    flex: 1 1 150px;
+    max-width: 160px;
+    text-align: center;
+    background-color: #d2e3f3;      /* bleu clair pour les items inactifs */
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    padding: 0.35rem 0.75rem;
+    line-height: 1.2;
 }
 
-#menuHorizontal a.actif {
-    color: #ff2f00 !important;
-    font-weight: bold;
+/* Effet au survol */
+#menuHorizontal li:hover {
+    background-color: #b9d3f0;
+    transform: translateY(-2px);
 }
 
-/* animation des liens */
+/* ====== Liens ====== */
 #menuHorizontal a {
+    display: block;
     text-decoration: none;
     font-style: italic;
-    color: darkblue;
-    position: relative; /* Nécessaire pour que le pseudo-élément se positionne correctement */
+    color: #0a2e75;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
 }
 
-#menuHorizontal a::after {
-    content: ""; /* Contenu vide pour générer un pseudo-élément */
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0; /* Commence avec une largeur de 0 */
-    height: 2px; /* Hauteur du trait */
-    background-color: blue; /* Couleur du trait */
-    transition: width 0.3s ease-out; /* Animation pour l'apparition du trait */
+/* ====== Élément actif ====== */
+#menuHorizontal li.actif {
+    background-color: #e63946;   !important;    /* rouge corail vif */
 }
 
-#menuHorizontal a:hover::after {
-    width: 100%; /* Largeur du trait au survol */
+#menuHorizontal li.actif a {
+    color: #ffffff;                 /* texte blanc sur fond rouge */
+    font-weight: 600;
 }
 
-#menuHorizontal a.actif {
-    color: #ff2f00;
-    font-weight: bold;
-}
-
-/* Optionnel, ajouter un léger changement de couleur au survol pour le texte */
+/* ====== Survol des liens ====== */
 #menuHorizontal a:hover {
-    color: #ff2f00;
+    color: #1a73e8;
 }
-

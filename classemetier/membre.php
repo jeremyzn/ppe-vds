@@ -59,7 +59,7 @@ class Membre extends Table
         $this->columns['email'] = $input;
 
         // fichier photo
-        $input = new InputFile(self::CONFIG);
+        $input = new InputText();
         $input->Require = false;
         $this->columns['photo'] = $input;
     }
