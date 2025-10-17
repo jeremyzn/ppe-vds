@@ -96,3 +96,59 @@
 26/09/2025 13:49:37	Le fichier structure.json est invalide.	/index.php	::1
 26/09/2025 13:49:37	Le fichier structure.json est invalide.	/index.php	::1
 26/09/2025 15:16:11	insert into fonction set repertoire = :repertoire, nom = :nom : SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicata du champ 'classement' pour la clef 'fonction.PRIMARY'	/ajax/ajouter.php	::1
+10/10/2025 15:40:22	Erreur SQL : SQLSTATE[42S22]: Column not found: 1054 Champ 'rang' inconnu dans field list	/administration/document/index.php	::1
+10/10/2025 15:40:22	Erreur SQL : SQLSTATE[42S22]: Column not found: 1054 Champ 'rang' inconnu dans field list	/administration/document/index.php	::1
+10/10/2025 15:40:28	Erreur SQL : SQLSTATE[42S22]: Column not found: 1054 Champ 'rang' inconnu dans field list	/administration/document/index.php	::1
+10/10/2025 15:40:28	Erreur SQL : SQLSTATE[42S22]: Column not found: 1054 Champ 'rang' inconnu dans field list	/administration/document/index.php	::1
+10/10/2025 16:25:35	Erreur SQL : SQLSTATE[42S22]: Column not found: 1054 Champ 'rang' inconnu dans field list	/administration/document/index.php	::1
+10/10/2025 16:25:35	Erreur SQL : SQLSTATE[42S22]: Column not found: 1054 Champ 'rang' inconnu dans field list	/administration/document/index.php	::1
+10/10/2025 16:34:15	Erreur SQL : SQLSTATE[42S22]: Column not found: 1054 Champ 'rang' inconnu dans field list	/administration/document/index.php	::1
+10/10/2025 16:34:15	Erreur SQL : SQLSTATE[42S22]: Column not found: 1054 Champ 'rang' inconnu dans field list	/administration/document/index.php	::1
+17/10/2025 14:09:55	Erreur SQL : SQLSTATE[42S22]: Column not found: 1054 Champ 'rang' inconnu dans field list	/administration/document/index.php	::1
+17/10/2025 14:09:55	Erreur SQL : SQLSTATE[42S22]: Column not found: 1054 Champ 'rang' inconnu dans field list	/administration/document/index.php	::1
+17/10/2025 14:11:11	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.administrateur' n'existe pas	/administration/index.php	::1
+17/10/2025 14:11:11	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.administrateur' n'existe pas	/administration/index.php	::1
+17/10/2025 14:11:43	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.classement' n'existe pas	/index.php	::1
+17/10/2025 14:11:43	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.classement' n'existe pas	/index.php	::1
+17/10/2025 14:11:44	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.membre' n'existe pas	/membre/profil/index.php	::1
+17/10/2025 14:11:44	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.membre' n'existe pas	/membre/profil/index.php	::1
+17/10/2025 14:11:45	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.administrateur' n'existe pas	/administration/photoinformation/index.php	::1
+17/10/2025 14:11:45	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.administrateur' n'existe pas	/administration/photoinformation/index.php	::1
+17/10/2025 14:11:45	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.administrateur' n'existe pas	/administration/index.php	::1
+17/10/2025 14:11:45	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.administrateur' n'existe pas	/administration/index.php	::1
+17/10/2025 14:11:45	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.membre' n'existe pas	/membre/photo/index.php	::1
+17/10/2025 14:11:45	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.membre' n'existe pas	/membre/photo/index.php	::1
+17/10/2025 14:11:46	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.membre' n'existe pas	/membre/profil/index.php	::1
+17/10/2025 14:11:46	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.membre' n'existe pas	/membre/profil/index.php	::1
+17/10/2025 14:11:49	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.classement' n'existe pas	/index.php	::1
+17/10/2025 14:11:49	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.classement' n'existe pas	/index.php	::1
+17/10/2025 14:11:53	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.classement' n'existe pas	/index.php	::1
+17/10/2025 14:11:53	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.classement' n'existe pas	/index.php	::1
+17/10/2025 14:11:54	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.classement' n'existe pas	/index.php	::1
+17/10/2025 14:11:54	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.classement' n'existe pas	/index.php	::1
+17/10/2025 14:11:54	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.classement' n'existe pas	/index.php	::1
+17/10/2025 14:11:54	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.classement' n'existe pas	/index.php	::1
+17/10/2025 14:11:54	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.classement' n'existe pas	/index.php	::1
+17/10/2025 14:11:54	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.classement' n'existe pas	/index.php	::1
+17/10/2025 14:11:54	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.classement' n'existe pas	/index.php	::1
+17/10/2025 14:11:54	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.classement' n'existe pas	/index.php	::1
+17/10/2025 14:11:55	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.classement' n'existe pas	/index.php	::1
+17/10/2025 14:11:55	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.classement' n'existe pas	/index.php	::1
+17/10/2025 14:11:55	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.classement' n'existe pas	/index.php	::1
+17/10/2025 14:11:55	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.classement' n'existe pas	/index.php	::1
+17/10/2025 14:11:55	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.classement' n'existe pas	/index.php	::1
+17/10/2025 14:11:55	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.classement' n'existe pas	/index.php	::1
+17/10/2025 14:11:55	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.classement' n'existe pas	/index.php	::1
+17/10/2025 14:11:55	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.classement' n'existe pas	/index.php	::1
+17/10/2025 14:11:55	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.classement' n'existe pas	/index.php	::1
+17/10/2025 14:11:55	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.classement' n'existe pas	/index.php	::1
+17/10/2025 14:30:29	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.classement' n'existe pas	/index.php	::1
+17/10/2025 14:30:29	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.classement' n'existe pas	/index.php	::1
+17/10/2025 14:30:32	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.classement' n'existe pas	/index.php	::1
+17/10/2025 14:30:32	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.classement' n'existe pas	/index.php	::1
+17/10/2025 14:33:54	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.document' n'existe pas	/administration/document/index.php	::1
+17/10/2025 14:33:54	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.document' n'existe pas	/administration/document/index.php	::1
+17/10/2025 14:33:59	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.document' n'existe pas	/administration/document/index.php	::1
+17/10/2025 14:33:59	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.document' n'existe pas	/administration/document/index.php	::1
+17/10/2025 14:34:30	Erreur SQL : SQLSTATE[42S22]: Column not found: 1054 Champ 'rang' inconnu dans field list	/administration/document/index.php	::1
+17/10/2025 14:34:30	Erreur SQL : SQLSTATE[42S22]: Column not found: 1054 Champ 'rang' inconnu dans field list	/administration/document/index.php	::1
