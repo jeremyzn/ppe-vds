@@ -5,7 +5,7 @@
 // -----------------------------------------------------------------------------------
 
 import {appelAjax} from "/composant/fonction/ajax.js";
-import {configurerFormulaire, effacerLesErreurs, fichierValide, verifierDimensionsImage, creerBoutonSuppression} from "/composant/fonction/formulaire.js";
+import {configurerFormulaire, effacerLesErreurs, fichierValide, verifierImage, creerBoutonSuppression} from "/composant/fonction/formulaire.js";
 import {afficherToast, confirmer} from "/composant/fonction/afficher";
 
 // -----------------------------------------------------------------------------------
@@ -150,7 +150,7 @@ function controlerFichier(file) {
         ajouter(file);
     } else {
         // sinon on vérifie les dimensions
-        verifierDimensionsImage(file, lesParametres, () => ajouter(file));
+        verifierImage(file, lesParametres, () => ajouter(file));
     }
 }
 

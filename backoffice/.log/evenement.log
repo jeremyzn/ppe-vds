@@ -24,3 +24,6 @@
 03/10/2025 14:05:26	Téléversement document id=11, fichier=Les_tests_unitaires_20251003-140526.pdf	/administration/information/ajax/ajouterdocument.php	::1
 03/10/2025 14:05:28	Téléchargement document id=11, fichier=Les_tests_unitaires_20251003-140526.pdf	/afficherdocumentinformation.php	::1
 03/10/2025 14:05:38	Suppression automatique du document id=11 (fichier physique introuvable: Les_tests_unitaires_20251003-140526.pdf)	/afficherdocumentinformation.php	::1
+10/10/2025 15:51:42	Téléversement document id=12, fichier=Mise_en_placede_l_application_20251010-155142.pdf	/administration/information/ajax/ajouterdocument.php	::1
+10/10/2025 15:52:30	Téléversement document id=13, fichier=cahier_des_charges_20251010-155230.pdf	/administration/information/ajax/ajouterdocument.php	::1
+17/10/2025 13:37:31	Téléchargement document id=12, fichier=Mise_en_placede_l_application_20251010-155142.pdf	/afficherdocumentinformation.php	::1

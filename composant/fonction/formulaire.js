@@ -1,14 +1,13 @@
 // Active le mode strict afin d'éviter les erreurs silencieuses et d'imposer un JS plus rigoureux.
-"use strict";
+'use strict';
 
 // ============================================================================
-// Version      : 2025.4
-// Date         : 09/09/2025
+// Version      : 2025.7
+// Date         : 16/10/2025
 // Historique   :
 //   ✓ Correctif de l'affichage des erreurs pour les champs input
 //   ✓ Suppression du paramètre onInput dans configurerFormulaire (désuet)
 //   ✓ Nouvelle fonction configurerDate (min, max, valeur, label dynamique)
-//   ✓ Ajustement de verifierDimensionsImage pour intégrer redimmensionner
 //   ✓ Ajout d’un paramètre 'zone' à effacerLesErreurs pour ciblage local
 //   ✓ Ajout des fonctions creerBoutonAction pour générer des boutons d'action
 //   ✓ Ajout de la fonction creerCheckbox pour générer des cases à cocher
@@ -18,12 +17,16 @@
 //   ✓ Ajout de la fonction enleverAccent pour supprimer les accents d'une chaîne
 //   ✓ Ajout de la fonction enleverAccentEtMajuscule pour supprimer les accents et les majuscules
 //   ✓ Modification de donneesValides et configurerformulaire pour exclure les cases à cocher
-//   ✓ utilisation d'un chemin relatif pour l'import de afficher.js
+//   ✓ utilisation d'un chemin absolue pour l'import de afficher.js
+//   ✓ Modification de la fonction creerBoutonAction pour utiliser un élément <button> au lieu de <span>
+//   ✓ changement de nom pour la fonction verifierImage qui devient verifierImage
 // ============================================================================
 
 // Import de fonctions utilitaires depuis un module externe
 
-import {afficherSousLeChamp, messageBox} from '/composant/fonction/afficher.js';
+import {afficherSousLeChamp, messageBox} from './afficher.js';
+// Import de la fonction utilitaire pour convertir les octets
+import {conversionOctet} from './format.js';
 
 /**
  * Prépare dynamiquement le DOM en insérant une div.messageErreur après chaque champ de saisie.
@@ -108,7 +111,7 @@ export function configurerFormulaire() {
  */
 export function configurerDate(inputDate, {min = null, max = null, valeur = null} = {}) {
     if (!inputDate || !(inputDate instanceof HTMLInputElement)) {
-        console.error("Le paramètre fourni n'est pas un élément <input type='date'> valide.");
+        console.error('Le paramètre fourni n\'est pas un élément <input type=\'date\'> valide.');
         return;
     }
 
@@ -192,13 +195,10 @@ export function verifier(input) {
         return true;
     } else {
         input.style.borderColor = 'red';
-        messageBox(input.validationMessage, "error");
+        messageBox(input.validationMessage, 'error');
         return false;
     }
 }
-
-// Import de la fonction utilitaire pour convertir les octets
-import {conversionOctet} from './format.js';
 
 /**
  * Valide un fichier en vérifiant sa taille et son extension, et affiche éventuellement un message d'erreur.
@@ -239,7 +239,7 @@ export function fichierValide(file, options = {}) {
  * @param {Object} lesParametres - Paramètres de validation contenant les dimensions max et le flag de redimensionnement.
  * @param {Function} onSuccess - Callback si les dimensions sont valides qui reçoit en paramètre l'objet file et l'objet img.
  */
-export function verifierDimensionsImage(file, lesParametres, onSuccess = {}) {
+export function verifierImage(file, lesParametres, onSuccess = {}) {
     const img = new Image();
     img.src = URL.createObjectURL(file);
 
@@ -289,7 +289,7 @@ export function verifierDimensionsImage(file, lesParametres, onSuccess = {}) {
     };
 
     img.onerror = () => {
-        afficherSousLeChamp('fichier', "Le fichier n'est pas une image valide.");
+        afficherSousLeChamp('fichier', 'Le fichier n\'est pas une image valide.');
         URL.revokeObjectURL(img.src); // Nettoyer aussi en cas d'erreur de chargement
     };
 }
@@ -382,7 +382,7 @@ export function effacerLesErreurs(zone = document) {
     }
     const msg = document.getElementById('msg');
     if (msg) {
-        msg.innerHTML = "";
+        msg.innerHTML = '';
     }
 }
 
@@ -403,14 +403,32 @@ export function creerBoutonAction({
                                       titre = '',
                                       action = null
                                   }) {
-    const bouton = document.createElement('span');
+    const bouton = document.createElement('button');
     bouton.textContent = icone;
     bouton.title = titre;
 
+    // Style du bouton pour ressembler à un lien hypertexte
+
     Object.assign(bouton.style, {
         color: couleur,
-        cursor: 'pointer'
+        background: 'none',
+        border: 'none',
+        padding: '0',
+        margin: '0',
+        fontSize: '1em',
+        userSelect: 'none',
+        cursor: 'pointer',
+        transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+        verticalAlign: 'middle',
+        display: 'inline' // Pour éviter le saut de ligne
+
     });
+
+    // Ajouter une classe pour cibler le :hover en JS
+    bouton.classList.add('bouton-action');
+
+    // Ajouter dynamiquement la règle CSS :hover si elle n'existe pas déjà
+    injecterHoverStyleBouton();
 
     if (typeof action === 'function') {
         bouton.addEventListener('click', action);
@@ -418,6 +436,23 @@ export function creerBoutonAction({
 
     return bouton;
 }
+
+function injecterHoverStyleBouton() {
+    const styleId = 'style-bouton-action-hover';
+    if (document.getElementById(styleId)) {
+        return;
+    }
+
+    const style = document.createElement('style');
+    style.id = styleId;
+    style.textContent = `
+        .bouton-action:hover {
+            transform: scale(1.3);
+        }
+    `;
+    document.head.appendChild(style);
+}
+
 
 export function creerBoutonModification(action) {
     return creerBoutonAction({
@@ -442,7 +477,7 @@ export function creerBoutonRemplacer(action) {
     return creerBoutonAction({
         icone: '♻️',
         couleur: 'red',
-        titre: "Téléverser une nouvelle version du document PDF",
+        titre: 'Téléverser une nouvelle version du document PDF',
         action: action
     });
 }
@@ -450,7 +485,7 @@ export function creerBoutonRemplacer(action) {
 export function creerCheckbox() {
     const input = document.createElement('input');
     input.type = 'checkbox';
-    input.classList.add("form-check-input", "my-auto", "m-3");
+    input.classList.add('form-check-input', 'my-auto', 'm-3');
     input.style.width = '25px';
     input.style.height = '25px';
     return input;
@@ -541,6 +576,6 @@ export function comparerSansCasse(str1, str2) {
  */
 export function contenir(texte, recherche) {
     const txt = enleverAccentEtMajuscule(texte);
-    const cherche = enleverAccentEtMajuscule(recherche)
+    const cherche = enleverAccentEtMajuscule(recherche);
     return txt.includes(cherche);
 }
