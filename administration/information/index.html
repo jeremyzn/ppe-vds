@@ -1,0 +1,83 @@
+<!doctype html>
+<div class="m-1" style="width: 60rem">
+    <div class="d-flex justify-content-between mb-3">
+        <p>Nombre d'informations : <span id="nb" class="fw-bold text-success"></span></p>
+        <button id="btnAjouter" class="btn btn-outline-danger mb-3">Ajouter une information</button>
+    </div>
+
+    <!-- input global removed; file input is inside the form -->
+
+    <table style="margin: auto; width:100%">
+        <thead>
+        <tr>
+            <th style='width:80px'>ID</th>
+            <th style='width:360px'>Titre</th>
+            <th style='width:120px'>Type</th>
+            <th style='width:200px'>Auteur</th>
+            <th style='width:180px'>Date</th>
+            <th style='width:160px'>Actions</th>
+        </tr>
+        </thead>
+        <tbody id="lesLignes"></tbody>
+    </table>
+
+    <!-- zone pour la gestion des fichiers associés (affichée dans le modal via JS) -->
+    <div id="zoneDocuments" style="display:none">
+        <h3>Documents associés</h3>
+        <div id="listeFichiers" class="mt-2"></div>
+    </div>
+
+</div>
+
+    <!-- formulaire intégré (single-page, non-modal) -->
+    <div id="formContainer" class="mt-4 p-3 border rounded" style="display:none;">
+        <h4 id="formTitle">Ajouter / Modifier une information</h4>
+        <form id="formInfo">
+            <input type="hidden" name="id" id="infoId">
+            <div class="mb-2">
+                <label for="titre">Titre</label>
+                <input type="text" id="titre" name="titre" class="form-control" required maxlength="255">
+            </div>
+            <!-- chapeau supprimé (non demandé par le cahier des charges) -->
+            <div class="mb-2">
+                <label for="type">Type</label>
+                <select id="type" name="type" class="form-control">
+                    <option value="Publique">Publique</option>
+                    <option value="Privée">Privée</option>
+                </select>
+            </div>
+            <div class="mb-2">
+                <label for="contenu">Contenu</label>
+                <textarea id="contenu" name="contenu" rows="10" class="form-control"></textarea>
+            </div>
+
+            <div class="mb-2">
+                <input type="file" id="fichierModal" accept=".pdf" style="display:none">
+                <button type="button" id="btnPickFile" class="btn btn-warning" style="background-color:#ffcc33; border-color:#ffcc33; color:#000;">Attacher un document à l'information</button>
+            </div>
+
+            <div class="mb-2 mt-3">
+                <h5>Liste des documents déjà associés à l'information</h5>
+                <div class="table-responsive">
+                    <table class="table table-sm" id="tableDocsAssocies">
+                        <thead>
+                            <tr>
+                                <th style="width:80px">Action</th>
+                                <th>Fichier</th>
+                            </tr>
+                        </thead>
+                        <tbody id="listeFichiersAssocies"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="mt-3 text-end">
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                <button type="button" id="btnCancel" class="btn btn-secondary">Annuler</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="/composant/tinymce/tinymce.min.js"></script>
+
+</div>

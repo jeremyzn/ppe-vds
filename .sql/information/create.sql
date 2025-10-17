@@ -2,7 +2,6 @@
 CREATE TABLE IF NOT EXISTS `information` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `titre` VARCHAR(255) NOT NULL,
-  `chapeau` TEXT DEFAULT NULL,
   `contenu` LONGTEXT NOT NULL,
   `type` ENUM('Publique','Privée') NOT NULL DEFAULT 'Publique',
   `auteur` VARCHAR(255) DEFAULT NULL,

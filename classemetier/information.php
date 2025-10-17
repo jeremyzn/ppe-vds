@@ -29,10 +29,7 @@ class Information extends Table
         $input->MaxLength = 255;
         $this->columns['titre'] = $input;
 
-        // chapeau
-        $input = new InputText();
-        $input->Require = false;
-        $this->columns['chapeau'] = $input;
+    // (chapeau retiré - champ non requis par le cahier des charges)
 
         // contenu (rich text)
         $input = new InputTextarea();
@@ -44,6 +41,8 @@ class Information extends Table
         $input = new InputList();
         $input->Require = true;
         $input->Value = "Publique";
+        // valeurs acceptées (doivent correspondre aux options du select)
+        $input->Values = ["Publique", "Privée"];
         $this->columns['type'] = $input;
 
         // auteur
@@ -67,7 +66,8 @@ class Information extends Table
      */
     public static function getAll(): array
     {
-        $sql = "SELECT id, titre, type, auteur, date_creation FROM information ORDER BY date_creation DESC";
+    // inclure le contenu pour permettre le préremplissage du formulaire d'édition en backoffice
+    $sql = "SELECT id, titre, contenu, type, auteur, date_creation FROM information ORDER BY date_creation DESC";
         $select = new Select();
         return $select->getRows($sql);
     }
