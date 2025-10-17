@@ -89,7 +89,7 @@ class Document extends Table
      */
     public static function getAll(): array
     {
-        $sql = "Select id, titre, fichier  from document;";
+        $sql = "Select id, titre,type, fichier  from document;";
         $select = new Select();
         $lesLignes = $select->getRows($sql);
         // ajout d'une colonne permettant de vérifier l'existence du logo

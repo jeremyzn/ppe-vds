@@ -26,9 +26,9 @@ values ('Autorisation parentale 4 saisons', '4 saisons', 'Autorisation parentale
        ('Les minimas pour les championnats de France', 'Public', 'Les minimas pour les championnats de France.pdf'),
        ('Parcours du 10 Km', '4 saisons', 'Parcours du 10 Km.pdf'),
        ('Parcours du 5 Km', '4 saisons', 'Parcours du 5 Km.pdf'),
-       ('Règlement des 4 saisons', '4 saisons', 'Reglement 4 saisons.pdf'),
+       ('Règlement des 4 saisons', '4 saisons', 'Reglement des 4 saisons.pdf'),
        ('Règlement intérieur', 'Club', 'Reglement interieur.pdf'),
        ('Statuts VDS adoptés en AG du 19/11/2021', 'Club', 'STATUTS VDS.pdf'),
        ('Tableau des allures pour les séances de VS', 'Membre', 'Tableau des allures pour séances de VS.pdf'),
        ('Tableau des allures pour les sorties longues', 'Membre', 'Tableau des allures pour les sorties longues.pdf'),
-       ('Tableau pour séance VMA', 'Membre', 'Tableau pour séance VMA.pdf');
+       ('Tableau pour séance VMA', 'Membre', 'Tableau pour seance VMA.pdf');

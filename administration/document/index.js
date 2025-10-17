@@ -31,6 +31,8 @@ for (const element of lesDocuments) {
     }
     // colonne : le titre du document
     tr.insertCell().innerText = element.titre;
+    // colonne : le type de document
+    tr.insertCell().innerText = element.type;
     // colonne fichier
     tr.insertCell().innerText = element.fichier;
 }

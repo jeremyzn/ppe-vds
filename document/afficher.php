@@ -18,6 +18,7 @@ if (!$document) {
 }
 $id = $document['id'];
 $titre = $document['titre'];
+//$type = $document['type'];
 $fichier = $document['fichier'];
 
 // Le document doit être présent dans le répertoire de stockage.
