@@ -92,13 +92,31 @@ class Document extends Table
         $sql = "Select id, titre,type, fichier  from document;";
         $select = new Select();
         $lesLignes = $select->getRows($sql);
+/**
         // ajout d'une colonne permettant de vérifier l'existence du logo
         foreach ($lesLignes as &$ligne) {
             $chemin = self::DIR . '/' . $ligne['fichier'];
             $ligne['present'] = is_file($chemin) ? 1 : 0;
         }
+ */
         return $lesLignes;
     }
+
+    /**
+     * Récupère les informations d’un document par son ID
+     *
+     * @param string $type
+     * @return array{id: int, type: string, titre: string}|null
+     */
+    public static function getByType(string $type): array
+    {
+        $sql = <<<SQL
+         select id, titre, type, fichier from document where type = :type;
+        SQL;
+        $select = new Select();
+        return $select->getRow($sql, ['type' => $type]);
+    }
+
 
     /**
      * Récupère les informations d’un document par son ID
