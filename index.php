@@ -18,7 +18,7 @@ $rawInfos = Information::getAll();
 $lesInfos = [];
 foreach ($rawInfos as $info) {
     if ($info['type'] === 'Publique' || isset($_SESSION['membre'])) {
-        $info['documents'] = Information::getDocuments((int)$info['id']);
+        $info['documents'] = Information::getDocuments((int) $info['id']);
         $lesInfos[] = $info;
     }
 }

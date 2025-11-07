@@ -3,7 +3,7 @@ if (!isset($titre)) {
     $titre = ucwords(trim(dirname($_SERVER['PHP_SELF']), '/'));
 }
 ?>
-<div class="d-flex justify-content-between align-items-center">
+<div class="d-flex justify-content-between align-items-center w-100">
     <!-- Bloc de gauche : liens de navigation -->
     <div>
         <?php if ($titre !== "Site Du VDS") : ?>

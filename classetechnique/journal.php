@@ -7,8 +7,8 @@ declare(strict_types=1);
  * Aucun fichier de configuration requis.
  *
  * @author Guy Verghote
- * @version 2025.3
- * @date 14/06/2025
+ * @version 2025.4
+ * @date 16/11/2025
  */
 class Journal
 {
@@ -141,9 +141,27 @@ class Journal
      */
     public static function getIp(): string
     {
-        return $_SERVER['HTTP_X_FORWARDED_FOR']
-            ?? $_SERVER['HTTP_CLIENT_IP']
-            ?? $_SERVER['REMOTE_ADDR']
-            ?? 'CLI';
+        $headers = [
+            'HTTP_X_FORWARDED_FOR',
+            'HTTP_CLIENT_IP',
+            'REMOTE_ADDR'
+        ];
+
+        foreach ($headers as $key) {
+            if (!empty($_SERVER[$key])) {
+                // On récupère la première IP s'il y en a plusieurs
+                $ip = explode(',', $_SERVER[$key])[0];
+                $ip = trim($ip);
+
+                // Validation stricte de l'adresse IP
+                if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+                    return $ip; // IP publique valide
+                } elseif (filter_var($ip, FILTER_VALIDATE_IP)) {
+                    return $ip; // IP privée (en interne par ex.)
+                }
+            }
+        }
+
+        return 'CLI'; // si exécution en ligne de commande
     }
 }

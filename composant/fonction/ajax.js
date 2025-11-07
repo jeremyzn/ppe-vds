@@ -1,13 +1,14 @@
 "use strict";
 
-// Version 2025.5
-// Date version : 09/09/2025
+// Version 2025.6
+// Date version : 01/11/2025
 // Détection erreur 404
 // Le message d'erreur est affiché avec genererMessage si la balise msg existe, sinon avec messageBox
 // Pour une réponse attendue on Json : on récupère d'abord la version en texte afin de connaitre  l'erreur
 // si la réponse n'est pas au format json
+// utilisation de la fonction afficherErreur du module afficher.js afin de rendsre lisible le contenu reçu en cas d'erreur de parsing (Xdebug par ex)
 
-import {messageBox, afficherSousLeChamp, genererMessage} from './afficher.js';
+import {messageBox, afficherSousLeChamp, genererMessage, afficherErreur} from './afficher.js';
 
 /**
  * Envoie une requête AJAX (GET ou POST) à l'URL spécifiée avec les données fournies.
@@ -101,7 +102,7 @@ export async function appelAjax({
             body: method === 'POST' ? data : null
         });
 
-        // ✅ Vérification explicite des erreurs HTTP
+        // Vérification explicite des erreurs HTTP
         if (!objResponse.ok) {
             // const statusText = objResponse.statusText || 'Erreur inconnue';
             // const message = `Erreur HTTP ${objResponse.status} : ${statusText}`;
@@ -146,13 +147,12 @@ export async function appelAjax({
             // (utile pour diagnostiquer les erreurs serveur qui renvoient du HTML)
             const texte = await objResponse.text();
             try {
-                reponse = JSON.parse(texte); // ✅ Si c’est bien du JSON, on accepte
+                reponse = JSON.parse(texte); // Si c’est bien du JSON, on accepte
             } catch (e) {
                 // ❌ Ce n'est pas du JSON valide
                 const erreurLecture = "Le serveur n'a pas renvoyé de réponse dans le format attendu (JSON).";
                 messageBox(erreurLecture, 'error');
-                console.warn(erreurLecture);
-                console.warn("Contenu reçu :", texte);
+                console.warn("Contenu reçu :", afficherErreur(texte));
                 return null;
             }
         }

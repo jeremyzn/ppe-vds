@@ -1,29 +1,32 @@
 'use strict';
 
-// Version 2025.3
-// Date version : 05/08/2025
+// Version 2025.5
+// Date version : 31/10/2025
 // Correction de l'affichage sous le champ afin de prendre en compte le conteneur parent
 // Attribution d'une couleur de fond rouge par défaut et d'un style italic sur genererMessage
+// Modification de la fonction genererMessage pour ajouter un délai avant la fermeture automatique
+// Ajout fonction afficherErreur pour un affichage lisible des erreurs dans la console
 
 // Variables persistantes (au niveau du module) utilisées pour la modale de confirmation
 let modal, btnOui, btnNon, confirmationMessage;
-
 
 /**
  * Génération d'un message dans une mise en forme bootstrap (class='alert-dismissible')
  * Nécessite le composant bootstrap avec la partie js !!!
  * @param {string} texte à afficher.
  * @param {string} couleur de fond : vert, rouge ou orange
+ * @param {number} duree en ms avant fermeture automatique (0 = pas de fermeture automatique)
  * @return {string} Chaîne au format HTML
  */
 
-export function genererMessage(texte, couleur = 'rouge') {
+export function genererMessage(texte, couleur = 'rouge', duree = 0) {
     // Ne pas transformer un message x_debug
     if (texte.startsWith('<br />')) {
         return texte;
     }
-    // détermination de la classe bootstrap à utiliser en fonction de la couleur choisie
-    let code = '#fb7e7b'; // par défaut
+
+    // détermination de la couleur à utiliser
+    let code = '#fb7e7b'; // rouge par défaut
     if (couleur === 'vert') {
         code = '#1FA055';
     } else if (couleur === 'rouge') {
@@ -31,14 +34,35 @@ export function genererMessage(texte, couleur = 'rouge') {
     } else if (couleur === 'orange') {
         code = '#FF7415';
     }
-    return `
-            <div class="alert alert-dismissible fade show" 
-                 style="color:white; background-color:${code}; font-size: 0.8rem; font-style: italic" 
-                 role="alert">
-                 ${texte}
-                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-            </div>`;
+
+    // Génération d'un ID unique pour la div (utile pour la fermeture automatique)
+    const id = `alert-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+
+    // Structure HTML avec l'ID ajouté
+    const html = `
+        <div id="${id}" class="alert alert-dismissible fade show" 
+             style="color:white; background-color:${code}; font-size: 0.8rem; font-style: italic" 
+             role="alert">
+             ${texte}
+             <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+        </div>`;
+
+    // Si duree > 0, on planifie la fermeture automatique
+    if (duree > 0) {
+        // Utiliser un petit délai pour laisser le temps au DOM d'intégrer la div
+        setTimeout(() => {
+            const element = document.getElementById(id);
+            if (element) {
+                // On utilise Bootstrap pour fermer proprement l'alerte (si Bootstrap 5)
+                const alert = bootstrap.Alert.getOrCreateInstance(element);
+                alert.close();
+            }
+        }, duree + 1000); // +1000ms pour s'assurer que l'élément est dans le DOM
+    }
+
+    return html;
 }
+
 
 /**
  * Affiche un toast personnalisé sur l'écran.
@@ -286,6 +310,37 @@ export function messageBox(message, type = 'success') {
 
 
 /**
+ * Affiche un message d'erreur de manière lisible dans la console.
+ * - Supprime les balises HTML (comme celles de Xdebug)
+ * - Conserve les sauts de ligne (<br>)
+ * - Formate joliment les objets ou tableaux JSON
+ *
+ * @param {string|object} message Le message brut reçu via AJAX
+ */
+export function afficherErreur(message) {
+    let texte = "";
+
+    // Si c'est un objet ou un tableau, on le transforme en JSON lisible
+    if (typeof message === "object" && message !== null) {
+        texte = JSON.stringify(message, null, 2); // indentation pour lisibilité
+    } else {
+        // Si c'est une chaîne, on la nettoie
+        texte = message;
+
+        // Remplace <br> ou <br /> par un saut de ligne
+        texte = texte.replace(/<br\s*\/?>/gi, "\n");
+
+        // Supprime toutes les autres balises HTML
+        const tmp = document.createElement("div");
+        tmp.innerHTML = texte;
+        texte = tmp.textContent || tmp.innerText || "";
+    }
+
+    console.log("Erreur reçue :\n" + texte);
+}
+
+
+/**
  * Affiche un message puis redirige automatiquement
  * @param {string} message
  * @param {string} url
@@ -394,7 +449,9 @@ export function confirmer(callback, message = 'Confirmer votre demande ?') {
 
     btnOui.onclick = () => {
         modal.style.display = 'none';
-        if (typeof callback === 'function') callback();
+        if (typeof callback === 'function') {
+            callback();
+        }
     };
 
     btnNon.onclick = () => {
