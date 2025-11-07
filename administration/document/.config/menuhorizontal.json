@@ -1,0 +1,10 @@
+[
+  {
+    "label": "Liste",
+    "href": "/administration/document/liste"
+  },
+  {
+    "label": "Ajout",
+    "href": "/administration/document/ajout"
+  }
+]

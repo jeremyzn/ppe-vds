@@ -27,8 +27,6 @@ class ControleAcces
             self::verifierAccesMembre();
         }
 
-        // Gestion du jeton CSRF
-        self::gererJeton($dernierChemin);
     }
 
     /**
@@ -70,22 +68,6 @@ class ControleAcces
         }
     }
 
-    /**
-     * Crée ou vérifie un jeton CSRF en fonction du contexte (formulaire / ajax)
-     * @param string $dernierChemin
-     * @return void
-     */
-    private static function gererJeton(string $dernierChemin): void
-    {
-        if ($dernierChemin === 'ajax') {
-            Jeton::verifier();
-        } else {
-            $ajax = dirname($_SERVER['SCRIPT_FILENAME']) . '/ajax';
-            if (is_dir($ajax)) {
-                Jeton::creer();
-            }
-        }
-    }
 
     /**
      * Redirige vers la page de connexion en mémorisant l'URL demandée dans la session

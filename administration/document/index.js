@@ -15,20 +15,53 @@ const lesLignes = document.getElementById('lesLignes');
 // afficher le tableau des documents
 
 for (const element of lesDocuments) {
+
     let tr = lesLignes.insertRow();
     tr.style.verticalAlign = 'middle';
-    // colonne : voir (si le fichier existe)
+
+
+    // cellule contenant "voir" + "modifier" + "supprimer"
     let td = tr.insertCell();
+
+
     if (element.present) {
-        let a = document.createElement('a');
-        a.href = "afficher.php?id=" + element.id;
-        a.target = 'pdf';
-        a.innerText = '📄';
-        td.appendChild(a);
+        let view = document.createElement('a');
+        view.href = "afficher.php?id=" + element.id;
+        view.target = 'pdf';
+        view.innerText = '📄';
+        view.className = 'doc-link';
+        td.appendChild(view);
     } else {
-        td.innerText = '❓';
-        console.log("Le classement " + element.id + " n'a pas été trouvé");
+        let missing = document.createElement('span');
+        missing.innerText = '❓';
+        missing.className = 'doc-missing';
+        td.appendChild(missing);
+        console.log("Le document " + element.id + " n'a pas été trouvé");
     }
+
+// séparateur puis lien modifier
+    let sep = document.createElement('span');
+    sep.innerText = ' '; // ou '\u00A0' pour insécable
+    td.appendChild(sep);
+
+    let modif = document.createElement('a');
+    modif.href = 'maj.php?id=' + element.id; // adapter l'URL de modification
+    modif.target = 'pdf';
+    modif.innerText = '✏️';
+    modif.className = 'modif-link';
+    td.appendChild(modif);
+
+// séparateur puis lien supprimer
+    let sep2 = document.createElement('span');
+    sep2.innerText = ' '; // ou '\u00A0' pour insécable
+    td.appendChild(sep2);
+
+    let sup = document.createElement('a');
+    sup.href = 'supprimer.php?id=' + element.id; // adapter l'URL de suppression
+    sup.target = '_self';
+    sup.innerText = '❌';
+    sup.className = 'sup-link';
+    td.appendChild(sup);
     // colonne : le titre du document
     tr.insertCell().innerText = element.titre;
     // colonne : le type de document

@@ -6,7 +6,7 @@ $lesOptions = file_get_contents(RACINE . '/backoffice/.config/menuvertical.json'
 <!DOCTYPE HTML>
 <html lang="fr">
 <head>
-    <title>Amicale du Val de Somme</title>
+    <title>Backoffice PPE-VDS</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">

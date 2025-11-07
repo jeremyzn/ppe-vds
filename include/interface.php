@@ -6,6 +6,16 @@ Structure::verifier();
 $mention = Page::getMentions();
 $politique = Page::getPolitique();
 
+// chargement des options du menu horizontal si le module en possède un
+if (is_file('../.config/menuhorizontal.json')) {
+    $lesOptionsHorizontales = file_get_contents('../.config/menuhorizontal.json');
+    $menuHorizontal = <<<HTML
+    <script type='module'>
+        import {initialiserMenuHorizontal} from "/composant/menuhorizontal/menu.js";
+        initialiserMenuHorizontal($lesOptionsHorizontales);
+    </script>
+HTML;
+}
 ?>
 
 <!DOCTYPE HTML>

@@ -13,6 +13,11 @@ for (let element of data) {
     // Carte stylisée
     let a = document.createElement('a');
     a.className = 'admin-card flex-fill';
+    /**
+    if (element.repertoire === 'document') {
+        element.repertoire = 'document/liste';
+    }
+        */
     a.href = '/administration/' + element.repertoire;
     a.textContent = element.nom;
 

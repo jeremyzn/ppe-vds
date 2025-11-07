@@ -22,7 +22,7 @@ CREATE TABLE Document
 
 insert into document (titre, type, fichier)
 values ('Autorisation parentale 4 saisons', '4 saisons', 'Autorisation parentale 4 saisons.pdf'),
-       ('Autorisation parentale pour l"adhésion', 'Club', 'Autorisation parentale pour adhesion.pdf'),
+       ('Autorisation parentale pour l''adhésion', 'Club', 'Autorisation parentale pour adhesion.pdf'),
        ('Les minimas pour les championnats de France', 'Public', 'Les minimas pour les championnats de France.pdf'),
        ('Parcours du 10 Km', '4 saisons', 'Parcours du 10 Km.pdf'),
        ('Parcours du 5 Km', '4 saisons', 'Parcours du 5 Km.pdf'),
