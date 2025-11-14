@@ -54,6 +54,8 @@ for (const element of lesClassements) {
     detailClassement.appendChild(a);
 }
 
+
+
 for (const doc of lesDocuments) {
     let a = document.createElement('a');
     a.classList.add('lien'),

@@ -156,3 +156,7 @@
 14/11/2025 13:34:32	Erreur SQL : SQLSTATE[42S22]: Column not found: 1054 Champ 'date' inconnu dans field list	/administration/document/index.php	::1
 14/11/2025 13:34:54	Erreur SQL : SQLSTATE[42S22]: Column not found: 1054 Champ 'date' inconnu dans field list	/administration/document/index.php	::1
 14/11/2025 13:34:54	Erreur SQL : SQLSTATE[42S22]: Column not found: 1054 Champ 'date' inconnu dans field list	/administration/document/index.php	::1
+14/11/2025 16:39:13	Erreur SQL : SQLSTATE[HY093]: Invalid parameter number	/index.php	::1
+14/11/2025 16:39:13	Erreur SQL : SQLSTATE[HY093]: Invalid parameter number	/index.php	::1
+14/11/2025 16:42:15	Erreur SQL : SQLSTATE[HY093]: Invalid parameter number	/index.php	::1
+14/11/2025 16:42:15	Erreur SQL : SQLSTATE[HY093]: Invalid parameter number	/index.php	::1

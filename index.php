@@ -12,7 +12,7 @@ $lesClassements = json_encode(Classement::getAll());
 
 $prochaineEdition = json_encode(Epreuve::getProchaineEpreuve());
 
-$lesDocuments = json_encode(Document::getAll());
+$lesDocuments = json_encode(Document::getAllButMembre());
 if (isset($_SESSION['membre'])) {
     $lesDocumentsMembre = json_encode(Document::getByType('Membre'));
 }
@@ -29,7 +29,7 @@ $head = <<<HTML
         const prochaineEdition = $prochaineEdition;
         const lesClassements = $lesClassements;
         const lesDocuments = $lesDocuments;
-        
+        const lesDocumentsMembre = $lesDocumentsMembre;
     </script>
 HTML;
 

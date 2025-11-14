@@ -124,6 +124,22 @@ class Document extends Table
         return $select->getRows($sql, ['type' => $type]);
     }
 
+    public static function getAllButMembre(): array|false
+    {
+        $sql = <<<SQL
+         select id, fichier, titre from document where type = 'Public' || type = '4 saisons' || type = 'Club';
+        SQL;
+        $select = new Select();
+        $lesLignes = $select->getRows($sql);
+        // ajout d'une colonne permettant de vérifier l'existence du logo
+        foreach ($lesLignes as &$ligne) {
+            $chemin = self::DIR . '/' . $ligne['fichier'];
+            $ligne['present'] = is_file($chemin) ? 1 : 0;
+        }
+        return $lesLignes;
+    }
+    // ------------------------------------------------------------------------------------------------
+
     /**
      * Supprime le fichier PDF associé au document
      * @param string $fichier
