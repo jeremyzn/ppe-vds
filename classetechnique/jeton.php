@@ -4,75 +4,69 @@ declare(strict_types=1);
 /**
  * Classe Jeton : gère la création et la vérification de jetons CSRF
  * Permet de fournir une preuve que la requête a bien été initiée par l’utilisateur légitime (et non par un site externe).
- *
+ * Remarque : Si toutes les entrées utilisateurs sont bien filtrée il n'a pas de risque d'injection XSS qui pourrait contourner cette protection
  * @Author : Guy Verghote
- * @Version 2025.2
- * @Date : 11/07/2025
+ * @Version 2025.4
+ * @Date : 12/11/2025
  */
 class Jeton
 {
-
     /**
      * Création d'un jeton de vérification sécurisé CSRF ("Cross-Site Request Forgery")
      * @param int $dureeVie Durée de vie du jeton en secondes
-     * Si $dureeVie vaut 0, le jeton n’expire pas (ou expire avec la session).
+     * Si $dureeVie vaut 0, le jeton expire avec la session.
      * @return void
      */
-    public static function creer(int $dureeVie = 0)
+    public static function creer(int $dureeVie = 0): void
     {
-        # if (!isset($_SESSION['token'])) {
+        $token = bin2hex(random_bytes(32));
+        $expires = $dureeVie > 0 ? time() + $dureeVie : 0;
+        $_SESSION['csrf_token'] = [
+            'value' => $token,
+            'expires' => $expires,
+        ];
 
-            $token = bin2hex(random_bytes(32));
-            $expires = $dureeVie > 0 ? time() + $dureeVie : time() + (10 * 365 * 24 * 3600); // 10 ans
-
-            $_SESSION['token'] = [
-                'value' => $token,
-                'expires' => $expires,
-            ];
-
-            setcookie('token', $token, [
-                'expires' => $expires, // Le navigateur supprimera le cookie après cette date
-                'path' => '/',
-                'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on', // HTTPS obligatoire
-                'httponly' => true,    // Le cookie n'est pas accessible en JavaScript
-                'samesite' => 'Strict' // Protection CSRF
-            ]);
-        }
-    #}
-
+        setcookie('csrf_token', $token, [
+            'expires' => $expires,
+            'path' => '/',
+            'secure' => (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off'),
+            'httponly' => true,
+            'samesite' => 'Strict'
+        ]);
+    }
 
     /**
      * Vérifie si le jeton reçu via le cookie est valide
-     * @return bool
+     * @return void
      */
-    public static function verifier()
+    public static function verifier(): void
     {
 
-        // 1. Vérifier que le jeton existe côté serveur
-        if (!isset($_SESSION['token'])) {
-            Erreur::traiterReponse("Jeton manquant côté serveur.", 'global');
+        // Vérifier que le jeton existe côté serveur 
+        if (!isset($_SESSION['csrf_token']['value'], $_SESSION['csrf_token']['expires'])) {
+            // accès direct ou non-AJAX → redirection vers la page d'erreur
+            header('Location: /erreur/403.php');
+            exit;
         }
 
-        // 2. Récupérer le jeton envoyé par le navigateur (via cookie)
-
-        $token = $_COOKIE['token'] ?? null;
-
-
-        if ($token === null) {
-            Erreur::traiterReponse("Jeton manquant.", 'global');
+        // Vérifier que  le cookie de meme nom existe aussi
+        if (!isset($_COOKIE['csrf_token'])) {
+            // accès direct ou non-AJAX → redirection vers la page d'erreur
+            header('Location: /erreur/403.php');
+            exit;
         }
 
-        // 3. Comparer la valeur du cookie avec celle en session
-        if ($_SESSION['token']['value'] !== $token) {
-            Erreur::traiterReponse("Jeton invalide.", 'global');
+        //  Vérifier que le jeton côté serveur n'a pas expiré
+        $expires = (int) $_SESSION['csrf_token']['expires'];
+        if ($expires > 0 && $expires < time()) {
+            Erreur::envoyerReponse("Votre session a expiré, veuillez recharger la page et réessayer.", 'global');
         }
 
-        // 4. Vérifier l'expiration du jeton
-        if ($_SESSION['token']['expires'] < time()) {
-            Erreur::traiterReponse("Jeton expiré.", 'global');
+        // Vérifier que les deux valeurs correspondent
+        // Utiliser hash_equals() est essentiel pour éviter les attaques par timing.
+        if (!hash_equals($_SESSION['csrf_token']['value'], $_COOKIE['csrf_token'])) {
+            header('Location: /erreur/403.php');
+            exit;
         }
-
     }
 }
-
-

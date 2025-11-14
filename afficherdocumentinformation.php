@@ -37,11 +37,11 @@ $cheminFichier = RACINE . "/data/documentinformation/" . $fichier;
 if (!is_file($cheminFichier)) {
     // Log de l'erreur et suppression automatique de l'enregistrement en base
     Journal::enregistrer("Suppression automatique du document id=$idDoc (fichier physique introuvable: $fichier)");
-    
+
     $db = Database::getInstance();
     $stmt = $db->prepare('DELETE FROM documentinformation WHERE id = :id');
     $stmt->execute(['id' => $idDoc]);
-    
+
     Erreur::afficherReponse("Le document demandé n'a pas été trouvé.", 'global');
 }
 

@@ -59,7 +59,7 @@ class InputFile extends Input
     public function checkValidity(): bool
     {
         // Le fichier doit absolument être renseigné
-        if (!$this->file || !isset($this->file['name']) || $this->file['error'] !== 0) {
+        if (!$this->file || !isset($this->file['name'])) {
             $this->validationMessage = 'Le fichier est invalide ou n\'a pas été téléchargé correctement.';
             return false;
         }

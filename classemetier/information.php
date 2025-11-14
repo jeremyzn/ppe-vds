@@ -11,7 +11,7 @@ class Information extends Table
         'repertoire' => '/data/documentinformation',
         'extensions' => ['pdf'],
         'types' => ['application/pdf'],
-        'maxSize' => 2 * 1024 * 1024,
+        'maxSize' => 5 * 1024 * 1024,
         'require' => false,
         'rename' => true,
         'sansAccent' => true,

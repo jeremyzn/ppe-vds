@@ -4,9 +4,17 @@ import { appelAjax } from "/composant/fonction/ajax.js";
 import { confirmer, afficherToast } from "/composant/fonction/afficher.js";
 import { configurerFormulaire, effacerLesErreurs, fichierValide, creerBoutonSuppression, creerBoutonModification } from "/composant/fonction/formulaire.js";
 
+/**
+ * administration/information/index.js
+ * Gestion de la page d'administration des informations : affichage, formulaire
+ * et gestion des documents associés (upload / suppression).
+ *
+ * Variables globales attendues: `lesInformations`, `lesDocumentsInfo`, `tinymce`
+ */
+
 /* global lesInformations, lesDocumentsInfo, tinymce */
 
-// éléments de l'interface
+// DOM - éléments de l'interface
 const lesLignes = document.getElementById('lesLignes');
 const nb = document.getElementById('nb');
 const btnAjouter = document.getElementById('btnAjouter');
@@ -21,6 +29,7 @@ const listeFichiers = document.getElementById('listeFichiersAssocies');
 configurerFormulaire();
 
 // Assistant pour la gestion de l'affichage de la liste des fichiers associés
+// Fonctions utilitaires pour la liste des fichiers associés
 function montrerAucunFichier() {
     if (!listeFichiers) return;
     listeFichiers.innerHTML = '';
@@ -39,10 +48,10 @@ function supprimerPlaceholderSiPresent() {
     if (p) p.remove();
 }
 
-// longueur max pour le titre affiché dans le tableau (tronque côté JS, n'affecte pas le CSS)
+// longueur max du titre affiché dans le tableau
 const TITRE_MAX_LENGTH = 30;
 
-// style pour la ligne en cours d'édition
+// Style pour la ligne en édition
 function ensureEditingStyle() {
     if (document.getElementById('style-row-editing')) return;
     const style = document.createElement('style');
@@ -57,7 +66,7 @@ function ensureEditingStyle() {
 let currentEditingId = null;
 function setEditing(id) {
     ensureEditingStyle();
-    // effacer le précédent
+    // retirer la classe d'édition de la ligne précédente
     if (currentEditingId) {
         const prev = document.getElementById(String(currentEditingId));
         if (prev) prev.classList.remove('row-editing');
@@ -69,10 +78,10 @@ function setEditing(id) {
     }
 }
 
-// rendu du tableau à la manière des autres pages admin
+// nombre d'éléments
 nb.innerText = (Array.isArray(lesInformations) ? lesInformations.length : 0);
 
-// Assistant : afficher un message quand il n'y a aucune information
+// Affiche un message quand il n'y a aucune information
 function montrerAucuneInformation() {
     if (!lesLignes) return;
     lesLignes.innerHTML = '';
@@ -92,23 +101,23 @@ function escapeHtml(str) {
     });
 }
 
+// Crée une ligne de tableau représentant une information
+// Colonnes: ID, Titre, Type, Auteur, Date, Fichiers, Actions
 function creerLigne(info) {
     const tr = document.createElement('tr');
     tr.id = info.id;
 
-    // créer les cellules dans l'ordre attendu par l'en-tête : ID, Titre, Type, Auteur, Date, Fichiers, Actions
     const tdId = tr.insertCell(); tdId.textContent = info.id;
     const tdTitre = tr.insertCell();
-    // tronquer le titre côté JS pour éviter le débordement dans le tableau
+    // Tronque le titre pour l'affichage et met le titre complet en 'title'
     const rawTitle = info.titre || '';
     const displayRaw = rawTitle.length > TITRE_MAX_LENGTH ? rawTitle.slice(0, TITRE_MAX_LENGTH) + '…' : rawTitle;
     tdTitre.textContent = escapeHtml(displayRaw);
-    // attribut title pour voir le titre complet au survol
     tdTitre.title = rawTitle;
     const tdType = tr.insertCell(); tdType.textContent = escapeHtml(info.type);
     const tdAuteur = tr.insertCell(); tdAuteur.textContent = escapeHtml(info.auteur);
 
-    // date de mise à jour (ou création si jamais modifié)
+    // Date (modification ou création)
     const tdDate = tr.insertCell();
     if (info.date_modif) {
         const date = new Date(info.date_modif);
@@ -120,7 +129,7 @@ function creerLigne(info) {
         tdDate.textContent = '-';
     }
 
-    // cellule fichiers
+    // Cellule: nombre de fichiers associés
     const tdFichiers = tr.insertCell();
     if (typeof lesDocumentsInfo !== 'undefined' && lesDocumentsInfo[info.id]) {
         const nbDocs = lesDocumentsInfo[info.id].length;
@@ -129,19 +138,22 @@ function creerLigne(info) {
         tdFichiers.textContent = 'Aucun fichier';
     }
 
-    // cellule actions (dernière)
+    // Actions: modifier / supprimer
     const tdAction = tr.insertCell();
     const container = document.createElement('div');
     container.style.display = 'flex';
     container.style.gap = '8px';
 
-    // bouton modifier
+    // Bouton modifier
     const btnMod = creerBoutonModification(() => ouvrirFormulaire(info.id));
+    // éviter que le bouton déclenche un submit si il est dans un <form>
+    if (btnMod && btnMod.tagName === 'BUTTON') btnMod.type = 'button';
     container.appendChild(btnMod);
 
-    // bouton supprimer (supprime l'information elle-même — utiliser l'API générique)
+    // Bouton supprimer (appel AJAX générique pour supprimer l'entrée)
     const supprimer = () => appelAjax({ url: '/ajax/supprimer.php', data: { table: 'Information', id: info.id }, success: () => location.reload() });
     const btnSup = creerBoutonSuppression(() => confirmer(supprimer));
+    if (btnSup && btnSup.tagName === 'BUTTON') btnSup.type = 'button';
     container.appendChild(btnSup);
 
     tdAction.appendChild(container);
@@ -149,7 +161,7 @@ function creerLigne(info) {
     return tr;
 }
 
-// construction initiale du tableau
+// Construction initiale du tableau
 if (Array.isArray(lesInformations) && lesInformations.length > 0) {
     for (const info of lesInformations) {
         lesLignes.appendChild(creerLigne(info));
@@ -158,7 +170,10 @@ if (Array.isArray(lesInformations) && lesInformations.length > 0) {
     montrerAucuneInformation();
 }
 
-// ouvre le formulaire et remplit les champs
+/*
+ * Ouvre le modal du formulaire. Si `id` est fourni, préremplit les champs
+ * avec les données de `lesInformations`; sinon prépare un formulaire vide.
+ */
 function ouvrirFormulaire(id = null) {
     if (formModal) {
         formModal.style.display = 'block';
@@ -174,7 +189,7 @@ function ouvrirFormulaire(id = null) {
         return;
     }
 
-    // remplir depuis lesInformations
+    // Préremplir depuis `lesInformations`
     const info = (Array.isArray(lesInformations) ? lesInformations.find(x => String(x.id) === String(id)) : null);
     if (info) {
         document.getElementById('infoId').value = info.id;
@@ -182,14 +197,11 @@ function ouvrirFormulaire(id = null) {
         document.getElementById('type').value = info.type;
         if (tinymce) tinymce.get('contenu').setContent(info.contenu || '');
     } else {
-        // Les données sont normalement injectées côté serveur dans `lesInformations`.
-        // Si l'information n'est pas trouvée, on ne fera pas d'appel générique vers /ajax/get.php
-        // (consigne : ne pas utiliser de get.php global). On informe l'utilisateur.
         afficherToast("Données manquantes : impossible de préremplir le formulaire.", 'error');
         return;
     }
 
-    // documents associés via lesDocumentsInfo -> remplir le tableau
+    // Remplit le tableau des fichiers associés (lesDocumentsInfo[id])
     listeFichiers.innerHTML = '';
     if (typeof lesDocumentsInfo !== 'undefined' && lesDocumentsInfo[id]) {
         const docs = lesDocumentsInfo[id];
@@ -199,9 +211,16 @@ function ouvrirFormulaire(id = null) {
                 const tdAct = tr.insertCell();
                 const tdFic = tr.insertCell();
                 tdFic.textContent = doc.nom_original || doc.fichier;
-                const btn = creerBoutonSuppression(() => confirmer(() => {
-                    appelAjax({ url: '/administration/information/ajax/supprimer.php', data: { id: doc.id }, success: () => { tr.remove(); if (listeFichiers.rows.length === 0) montrerAucunFichier(); } });
-                }));
+                // Supprime le document via AJAX, puis retire la ligne du tableau
+                const btn = creerBoutonSuppression(() => {
+                    appelAjax({
+                        url: '/administration/information/ajax/supprimer.php',
+                        data: { id: doc.id },
+                        success: () => { tr.remove(); if (listeFichiers.rows.length === 0) montrerAucunFichier(); },
+                        error: () => { afficherToast('Suppression du document impossible', 'error'); }
+                    });
+                });
+                if (btn && btn.tagName === 'BUTTON') btn.type = 'button';
                 tdAct.appendChild(btn);
                 listeFichiers.appendChild(tr);
             }
@@ -211,11 +230,11 @@ function ouvrirFormulaire(id = null) {
     } else {
         montrerAucunFichier();
     }
-    // mettre en évidence cette ligne
+    // Met en évidence la ligne actuellement éditée
     setEditing(id);
 }
 
-// events
+// Événements DOM
 btnAjouter.onclick = () => ouvrirFormulaire(null);
 btnCancel.onclick = () => { if (formModal) { formModal.style.display = 'none'; formModal.setAttribute('aria-hidden', 'true'); } setEditing(null); };
 
@@ -226,23 +245,25 @@ fichierInput.onchange = () => {
     const params = { maxSize: 5 * 1024 * 1024, extensions: ['pdf'] };
     if (!fichierValide(file, params)) return;
 
-    // Ajouter une ligne cohérente dans le tableau des fichiers associés
+    // Ajoute une ligne dans le tableau des fichiers sélectionnés
     supprimerPlaceholderSiPresent();
     const tr = document.createElement('tr');
     const tdAct = tr.insertCell();
     const tdFic = tr.insertCell();
     tdFic.textContent = file.name;
 
-    // bouton suppression cohérent avec le style existant
+    // Bouton suppression pour retirer le fichier sélectionné
     const btn = creerBoutonSuppression(() => {
         tr.remove();
         if (listeFichiers.rows.length === 0) montrerAucunFichier();
     });
+    if (btn && btn.tagName === 'BUTTON') btn.type = 'button';
     tdAct.appendChild(btn);
 
     listeFichiers.appendChild(tr);
 };
 
+// Soumission du formulaire: enregistre l'information, puis upload du fichier si présent
 form.onsubmit = function (e) {
     e.preventDefault();
     effacerLesErreurs();
@@ -252,6 +273,7 @@ form.onsubmit = function (e) {
     appelAjax({
         url: '/administration/information/ajax/enregistrer.php', data: dataForm, success: (resp) => {
             const infoId = resp && resp.success ? resp.success : id;
+            // Si un fichier a été sélectionné, on l'envoie après l'enregistrement
             if (fichierInput.files.length > 0) {
                 const fd = new FormData(); fd.append('idInformation', infoId); fd.append('fichier', fichierInput.files[0]);
                 appelAjax({ url: '/administration/information/ajax/ajouter.php', data: fd, success: () => location.reload(), error: () => { afficherToast('Enregistré, upload échoué', 'error'); } });
@@ -262,7 +284,7 @@ form.onsubmit = function (e) {
     });
 };
 
-// TinyMCE init (comme les autres pages)
+// TinyMCE: configuration de l'éditeur pour le champ `#contenu`
 if (typeof tinymce !== 'undefined') {
     tinymce.init({
         license_key: 'gpl',
@@ -280,7 +302,7 @@ if (typeof tinymce !== 'undefined') {
          * En cas d'erreur, renvoyer { error: { message: '...' } } et un code HTTP 4xx.
          */
         setup: function (editor) {
-            editor.on('change', function () { /* synchronisation éventuelle */ });
+            editor.on('change', function () { /* marque le contenu modifié si besoin */ });
         }
     });
 }

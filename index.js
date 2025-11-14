@@ -63,25 +63,41 @@ if (typeof lesInformations !== 'undefined' && dernieresNouvelles) {
         let html = '';
         lesInformations.forEach((info, idx) => {
             const uid = info.id ? `info-${info.id}` : `info-${idx}`;
+            // calculer la date d'affichage (préférer date_modif si présente)
+            const dateSource = info.date_modif || info.date_creation || null;
+            const dateAffichage = dateSource ? new Date(dateSource).toLocaleDateString('fr-FR', { timeZone: 'Europe/Paris' }) : '';
+            // badge 'Nouveau' pour les informations récentes (par défaut 7 jours)
+            const NEW_DAYS = 7;
+            const isNew = dateSource ? (Date.now() - new Date(dateSource).getTime()) <= (NEW_DAYS * 24 * 60 * 60 * 1000) : false;
+            // ne pas afficher le libellé 'Publique' ; afficher le type seulement s'il n'est pas 'Publique'
+            let badgeHtml = '';
+            if (isNew) {
+                badgeHtml = `<span class="badge bg-success" style="font-size: 0.75em;">Nouveau</span>`;
+            } else if (info.type && info.type !== 'Publique') {
+                badgeHtml = `<span class="badge bg-secondary" style="font-size: 0.75em;">${info.type}</span>`;
+            }
             // Créer un bloc pour chaque information avec un toggle
             html += `<div class="info-item" style="display: block; text-align: left; margin-top: 4px; margin-left: 0.5rem; margin-right: 0.5rem; padding: 0.5rem; border: 1px solid #0790e4; background-color: #f8f9fa; border-radius: 0.25rem;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                     <strong style="color: #0790e4; font-size: 1.1em;">${info.titre}</strong>
                     <div style="display: flex; gap: 0.5rem; align-items: center;">
-                        <span class="badge bg-secondary" style="font-size: 0.75em;">${info.type}</span>
+                            ${badgeHtml}
                         <button class="toggle-news btn btn-sm btn-outline-secondary" data-target="${uid}" aria-expanded="true" style="font-size:0.8rem;">▲</button>
                     </div>
                 </div>
                 <div id="${uid}" class="content-html" style="margin-bottom: 8px;">
                     ${info.contenu}
                     <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #dee2e6; padding-top: 6px;">
-                        <small class="text-muted">Publié par ${info.auteur || 'INCONNU'}</small>
+                        <small class="text-muted">${(dateAffichage && info.auteur) ? `Publié le ${dateAffichage} • ${info.auteur}` : (dateAffichage ? `Publié le ${dateAffichage}` : (info.auteur ? `Publié par ${info.auteur}` : ''))}</small>
                         <div class="doc-actions">`;
             if (info.documents && info.documents.length > 0) {
                 info.documents.forEach(doc => {
-                    // Nettoyer le nom du fichier pour l'affichage (enlever le timestamp si présent)
-                    let nomAffichage = doc.fichier;
-                    nomAffichage = nomAffichage.replace(/_\d{8}-\d{6}(_\d+)?\.pdf$/i, '.pdf');
+                    // Préférer le nom original si présent, sinon nettoyer le nom stocké (supprimer suffixe timestamp)
+                    let nomAffichage = doc.nom_original || doc.fichier;
+                    if (!doc.nom_original && typeof nomAffichage === 'string') {
+                        // Supporter les deux formats de timestamp possibles (_YYYYMMDD-HHMMSS ou _YYYYMMDDHHMMSS) et suffixe incrémental
+                        nomAffichage = nomAffichage.replace(/_(?:\d{8}-\d{6}|\d{14})(?:\(\d+\))?(?=\.[^.]+$)/i, '');
+                    }
                     html += `<a href="/afficherdocumentinformation.php?id=${doc.id}" target="_blank" class="btn btn-sm btn-outline-primary ms-1" style="font-size: 0.75em;" title="${doc.fichier}">📄 ${nomAffichage}</a>`;
                 });
             }

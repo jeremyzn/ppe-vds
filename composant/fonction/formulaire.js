@@ -24,9 +24,9 @@
 
 // Import de fonctions utilitaires depuis un module externe
 
-import {afficherSousLeChamp, messageBox} from './afficher.js';
+import { afficherSousLeChamp, messageBox } from './afficher.js';
 // Import de la fonction utilitaire pour convertir les octets
-import {conversionOctet} from './format.js';
+import { conversionOctet } from './format.js';
 
 /**
  * Prépare dynamiquement le DOM en insérant une div.messageErreur après chaque champ de saisie.
@@ -109,7 +109,7 @@ export function configurerFormulaire() {
  * @param {string} [options.max] - Date maximale (format YYYY-MM-DD)
  * @param {string|null} [options.valeur] - Valeur initiale à définir (sinon min ou vide)
  */
-export function configurerDate(inputDate, {min = null, max = null, valeur = null} = {}) {
+export function configurerDate(inputDate, { min = null, max = null, valeur = null } = {}) {
     if (!inputDate || !(inputDate instanceof HTMLInputElement)) {
         console.error('Le paramètre fourni n\'est pas un élément <input type=\'date\'> valide.');
         return;
@@ -129,7 +129,7 @@ export function configurerDate(inputDate, {min = null, max = null, valeur = null
     }
     inputDate.value = valeur || '';
 
-    const formatFr = {day: '2-digit', month: '2-digit', year: 'numeric'};
+    const formatFr = { day: '2-digit', month: '2-digit', year: 'numeric' };
     const minFr = min ? new Date(min).toLocaleDateString('fr-FR', formatFr) : null;
     const maxFr = max ? new Date(max).toLocaleDateString('fr-FR', formatFr) : null;
 
@@ -211,7 +211,7 @@ export function verifier(input) {
  */
 export function fichierValide(file, options = {}) {
     // extraction depuis l'objet options de trois propriétés
-    const {maxSize, extensions} = options;
+    const { maxSize, extensions } = options;
     let message = '';
 
     if (!file) {
@@ -398,11 +398,11 @@ export function effacerLesErreurs(zone = document) {
  * @returns {HTMLElement} Élément <span> configuré
  */
 export function creerBoutonAction({
-                                      icone,
-                                      couleur = 'black',
-                                      titre = '',
-                                      action = null
-                                  }) {
+    icone,
+    couleur = 'black',
+    titre = '',
+    action = null
+}) {
     const bouton = document.createElement('button');
     bouton.textContent = icone;
     bouton.title = titre;
@@ -510,7 +510,7 @@ export function creerSelect(classes = []) {
  * @param {Array<string>} [options.classes] - Classes CSS à appliquer.
  * @returns {HTMLInputElement}
  */
-export function creerInputTexte({placeholder = '', classes = []} = {}) {
+export function creerInputTexte({ placeholder = '', classes = [] } = {}) {
     const input = document.createElement('input');
     input.type = 'text';
     input.placeholder = placeholder;
