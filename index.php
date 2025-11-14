@@ -13,7 +13,9 @@ $lesClassements = json_encode(Classement::getAll());
 $prochaineEdition = json_encode(Epreuve::getProchaineEpreuve());
 
 $lesDocuments = json_encode(Document::getAll());
-
+if (isset($_SESSION['membre'])) {
+    $lesDocumentsMembre = json_encode(Document::getByType('Membre'));
+}
 
 // récupération du contenu de la page mentions légales et de la politique de confidentialité
 // pour l'affichage dans le pied de page
@@ -27,6 +29,7 @@ $head = <<<HTML
         const prochaineEdition = $prochaineEdition;
         const lesClassements = $lesClassements;
         const lesDocuments = $lesDocuments;
+        
     </script>
 HTML;
 

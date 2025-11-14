@@ -69,6 +69,9 @@ for (const doc of lesDocuments) {
         case 'Club':
             documentClub.appendChild(a);
             break;
+        case 'Membre':
+            documentPublic.appendChild(a);
+            break;
     }
 }
 
