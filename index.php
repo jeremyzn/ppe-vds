@@ -10,8 +10,12 @@ $titre = "Site du VDS";
 // Chargement des derniers classements présents dans le répertoire 'data/classement'
 $lesClassements = json_encode(Classement::getAll());
 
-// Prochaine édition des 4 saisons
 $prochaineEdition = json_encode(Epreuve::getProchaineEpreuve());
+
+
+$lesDocumentsPublics = json_encode(Document::getByType('public'));
+$lesDocuments4s = json_encode(Document::getByType('4 saisons'));
+$lesDocumentClubs = json_encode(Document::getByType('club'));
 
 
 // récupération du contenu de la page mentions légales et de la politique de confidentialité
@@ -25,6 +29,9 @@ $head = <<<HTML
     <script>
         const prochaineEdition = $prochaineEdition;
         const lesClassements = $lesClassements;
+        const lesDocumentsPublics = $lesDocumentsPublics;
+        const lesDocuments4s = $lesDocuments4s;
+        const lesDocumentClubs = $lesDocumentClubs;
     </script>
 HTML;
 

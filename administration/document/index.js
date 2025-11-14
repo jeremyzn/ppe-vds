@@ -34,6 +34,7 @@ for (const element of lesDocuments) {
     } else {
         let missing = document.createElement('span');
         missing.innerText = '❓';
+        missing.href = "afficher.php?id=" + element.id;
         missing.className = 'doc-missing';
         td.appendChild(missing);
         console.log("Le document " + element.id + " n'a pas été trouvé");
