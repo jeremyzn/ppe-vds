@@ -4,14 +4,14 @@
 // Import des fonctions nécessaires
 // -----------------------------------------------------------------------------------
 
-import {initialiserToutesLesCartes, basculerToutesLesCartes} from "/composant/fonction/openclose.js?";
+import {basculerToutesLesCartes, initialiserToutesLesCartes} from "/composant/fonction/openclose.js?";
 import {formatDateLong} from "/composant/fonction/date.js";
 
 // -----------------------------------------------------------------------------------
 // Déclaration des variables globales
 // -----------------------------------------------------------------------------------
 
-/* global prochaineEdition, lesClassements, lesDocumentsPublics, lesDocuments4s, lesDocumentClubs*/
+/* global prochaineEdition, lesClassements, lesDocuments,*/
 
 // Récupération des éléments de l'interface
 const detailClassement = document.getElementById('detailClassement');
@@ -41,7 +41,7 @@ initialiserToutesLesCartes();
 // les informations
 
 // affichage de la prochaine épreuve
-dateEpreuve.innerText =  formatDateLong(prochaineEdition.date);
+dateEpreuve.innerText = formatDateLong(prochaineEdition.date);
 descriptionEpreuve.innerHTML = prochaineEdition.description;
 
 
@@ -54,32 +54,22 @@ for (const element of lesClassements) {
     detailClassement.appendChild(a);
 }
 
-
-
-// afficher le tableau des documents
-
-for (const doc of lesDocumentsPublics) {
+for (const doc of lesDocuments) {
     let a = document.createElement('a');
     a.classList.add('lien'),
         a.href = "/afficher.php?id=" + doc.id;
     a.innerText = doc.titre;
-    documentPublic.appendChild(a);
-}
-
-for (const doc of lesDocuments4s) {
-    let a = document.createElement('a');
-    a.classList.add('lien'),
-        a.href = "/afficher.php?id=" + doc.id;
-    a.innerText = doc.titre;
-    document4Saisons.appendChild(a);
-}
-
-for (const doc of lesDocumentClubs) {
-    let a = document.createElement('a');
-    a.classList.add('lien'),
-        a.href = "/afficher.php?id=" + doc.id;
-    a.innerText = doc.titre;
-    documentClub.appendChild(a);
+    switch (doc.type) {
+        case 'Public':
+            documentPublic.appendChild(a);
+            break;
+        case '4 saisons':
+            document4Saisons.appendChild(a);
+            break;
+        case 'Club':
+            documentClub.appendChild(a);
+            break;
+    }
 }
 
 

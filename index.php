@@ -12,10 +12,7 @@ $lesClassements = json_encode(Classement::getAll());
 
 $prochaineEdition = json_encode(Epreuve::getProchaineEpreuve());
 
-
-$lesDocumentsPublics = json_encode(Document::getByType('public'));
-$lesDocuments4s = json_encode(Document::getByType('4 saisons'));
-$lesDocumentClubs = json_encode(Document::getByType('club'));
+$lesDocuments = json_encode(Document::getAll());
 
 
 // récupération du contenu de la page mentions légales et de la politique de confidentialité
@@ -29,9 +26,7 @@ $head = <<<HTML
     <script>
         const prochaineEdition = $prochaineEdition;
         const lesClassements = $lesClassements;
-        const lesDocumentsPublics = $lesDocumentsPublics;
-        const lesDocuments4s = $lesDocuments4s;
-        const lesDocumentClubs = $lesDocumentClubs;
+        const lesDocuments = $lesDocuments;
     </script>
 HTML;
 
