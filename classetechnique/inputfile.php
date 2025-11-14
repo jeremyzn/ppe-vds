@@ -144,11 +144,14 @@ class InputFile extends Input
                 return false;
             }
         } else {
-            // Renommer en cas de doublon
-            $nom = pathinfo($nomFichier, PATHINFO_FILENAME);
+            // Renommer en cas de doublon : utiliser un timestamp pour le nom physique (garder nom original en BDD)
+            $nomBase = pathinfo($nomFichier, PATHINFO_FILENAME);
+            $timestamp = date('YmdHis');
+            $nomFichier = $nomBase . '_' . $timestamp . '.' . $extension;
+            // Si par malheur le fichier existe encore, ajouter un suffixe incrémental
             $i = 1;
-            while (is_file("$this->Repertoire/$nomFichier")) {
-                $nomFichier = "$nom($i).$extension";
+            while (is_file($this->Repertoire . '/' . $nomFichier)) {
+                $nomFichier = $nomBase . '_' . $timestamp . "($i)." . $extension;
                 $i++;
             }
         }

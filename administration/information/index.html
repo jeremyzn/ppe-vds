@@ -1,22 +1,29 @@
 <!doctype html>
-<div class="m-1" style="width: 60rem">
-    <div class="d-flex justify-content-between mb-3">
-        <p>Nombre d'informations : <span id="nb" class="fw-bold text-success"></span></p>
-        <button id="btnAjouter" class="btn btn-outline-danger mb-3">Ajouter une information</button>
+<div class="m-1" style="width: 60rem; margin: 0 auto;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex align-items-center gap-2">
+            <div class="d-inline-flex align-items-center px-3 py-1"
+                style="background:#f8f9fa;border-radius:999px;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+                <span class="me-2 text-muted small" style="font-weight:600;">Informations</span>
+                <span id="nb" class="badge bg-primary rounded-pill" aria-live="polite">0</span>
+            </div>
+        </div>
+        <button id="btnAjouter" class="btn btn-outline-danger mb-0">Ajouter une information</button>
     </div>
 
     <!-- input global removed; file input is inside the form -->
 
-    <table style="margin: auto; width:100%">
+    <table style="margin: 0 auto; width:85%; ">
         <thead>
-        <tr>
-            <th style='width:80px'>ID</th>
-            <th style='width:360px'>Titre</th>
-            <th style='width:120px'>Type</th>
-            <th style='width:200px'>Auteur</th>
-            <th style='width:180px'>Date</th>
-            <th style='width:160px'>Actions</th>
-        </tr>
+            <tr>
+                <th style='width:80px'>ID</th>
+                <th style='width:360px'>Titre</th>
+                <th style='width:120px'>Type</th>
+                <th style='width:200px'>Auteur</th>
+                <th style='width:180px'>Dernière MAJ</th>
+                <th style='width:120px'>Fichiers</th>
+                <th style='width:160px'>Actions</th>
+            </tr>
         </thead>
         <tbody id="lesLignes"></tbody>
     </table>
@@ -27,57 +34,107 @@
         <div id="listeFichiers" class="mt-2"></div>
     </div>
 
+
 </div>
 
-    <!-- formulaire intégré (single-page, non-modal) -->
-    <div id="formContainer" class="mt-4 p-3 border rounded" style="display:none;">
-        <h4 id="formTitle">Ajouter / Modifier une information</h4>
-        <form id="formInfo">
-            <input type="hidden" name="id" id="infoId">
-            <div class="mb-2">
-                <label for="titre">Titre</label>
-                <input type="text" id="titre" name="titre" class="form-control" required maxlength="255">
-            </div>
-            <!-- chapeau supprimé (non demandé par le cahier des charges) -->
-            <div class="mb-2">
-                <label for="type">Type</label>
-                <select id="type" name="type" class="form-control">
-                    <option value="Publique">Publique</option>
-                    <option value="Privée">Privée</option>
-                </select>
-            </div>
-            <div class="mb-2">
-                <label for="contenu">Contenu</label>
-                <textarea id="contenu" name="contenu" rows="10" class="form-control"></textarea>
-            </div>
-
-            <div class="mb-2">
-                <input type="file" id="fichierModal" accept=".pdf" style="display:none">
-                <button type="button" id="btnPickFile" class="btn btn-warning" style="background-color:#ffcc33; border-color:#ffcc33; color:#000;">Attacher un document à l'information</button>
-            </div>
-
-            <div class="mb-2 mt-3">
-                <h5>Liste des documents déjà associés à l'information</h5>
-                <div class="table-responsive">
-                    <table class="table table-sm" id="tableDocsAssocies">
-                        <thead>
-                            <tr>
-                                <th style="width:80px">Action</th>
-                                <th>Fichier</th>
-                            </tr>
-                        </thead>
-                        <tbody id="listeFichiersAssocies"></tbody>
-                    </table>
+<!-- Formulaire déplacé dans une modale légère (compacte) -->
+<div id="formModal" aria-hidden="true" style="display:none;">
+    <div id="formBackdrop"
+        style="position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:1040; display:flex; align-items:center; justify-content:center;">
+        <div id="formDialog" class="p-3 border rounded bg-white shadow"
+            style="width:90%; max-width:680px; max-height:80vh; overflow:auto; position:relative;">
+            <button id="btnCloseModal" type="button" class="btn btn-sm btn-outline-secondary"
+                style="position:absolute; right:12px; top:12px;">×</button>
+            <h4 id="formTitle" class="mb-3">Ajouter / Modifier une information</h4>
+            <form id="formInfo">
+                <input type="hidden" name="id" id="infoId">
+                <div class="mb-2">
+                    <label for="titre">Titre</label>
+                    <input type="text" id="titre" name="titre" class="form-control" required maxlength="255">
                 </div>
-            </div>
+                <div class="mb-2">
+                    <label for="type">Type</label>
+                    <select id="type" name="type" class="form-control">
+                        <option value="Publique">Publique</option>
+                        <option value="Privée">Privée</option>
+                    </select>
+                </div>
+                <div class="mb-2">
+                    <label for="contenu">Contenu</label>
+                    <textarea id="contenu" name="contenu" rows="8" class="form-control"></textarea>
+                </div>
 
-            <div class="mt-3 text-end">
-                <button type="submit" class="btn btn-primary">Enregistrer</button>
-                <button type="button" id="btnCancel" class="btn btn-secondary">Annuler</button>
-            </div>
-        </form>
+                <div class="mb-2">
+                    <input type="file" id="fichierModal" accept=".pdf" style="display:none">
+                    <button type="button" id="btnPickFile" class="btn btn-warning"
+                        style="background-color:#ffcc33; border-color:#ffcc33; color:#000;">Attacher un document à
+                        l'information</button>
+                    <div id="fichier" class="champ" style="display:inline-block; margin-left:12px"></div>
+                </div>
+
+                <div class="mb-2 mt-3">
+                    <h5>Liste des documents déjà associés à l'information</h5>
+                    <div class="table-responsive">
+                        <table class="table table-sm" id="tableDocsAssocies">
+                            <thead>
+                                <tr>
+                                    <th style="width:80px">Action</th>
+                                    <th>Fichier</th>
+                                </tr>
+                            </thead>
+                            <tbody id="listeFichiersAssocies"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="mt-3 text-end">
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    <button type="button" id="btnCancel" class="btn btn-secondary">Annuler</button>
+                </div>
+            </form>
+        </div>
     </div>
-
-    <script src="/composant/tinymce/tinymce.min.js"></script>
-
 </div>
+
+<script>
+    // Modale légère: ouverture/fermeture et interactions basiques
+    (function () {
+        const btnAjouter = document.getElementById('btnAjouter');
+        const formModal = document.getElementById('formModal');
+        const formBackdrop = document.getElementById('formBackdrop');
+        const btnCancel = document.getElementById('btnCancel');
+        const btnCloseModal = document.getElementById('btnCloseModal');
+        const btnPickFile = document.getElementById('btnPickFile');
+        const fichierModal = document.getElementById('fichierModal');
+
+        function openModal() {
+            formModal.style.display = 'block';
+            formModal.setAttribute('aria-hidden', 'false');
+            // scroll to top of dialog for better UX
+            const dialog = document.getElementById('formDialog');
+            if (dialog) dialog.scrollTop = 0;
+        }
+
+        function closeModal() {
+            formModal.style.display = 'none';
+            formModal.setAttribute('aria-hidden', 'true');
+            // optionally reset the form if desired: document.getElementById('formInfo').reset();
+        }
+
+        if (btnAjouter) btnAjouter.addEventListener('click', function (e) { e.preventDefault(); openModal(); });
+        if (btnCancel) btnCancel.addEventListener('click', function (e) { e.preventDefault(); closeModal(); });
+        if (btnCloseModal) btnCloseModal.addEventListener('click', function (e) { e.preventDefault(); closeModal(); });
+
+        // close clicking on backdrop (but not when clicking inside the dialog)
+        if (formBackdrop) formBackdrop.addEventListener('click', function (e) {
+            if (e.target === formBackdrop) closeModal();
+        });
+
+
+
+        // Escape key closes modal
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+    })();
+</script>
+
+<script src="/composant/tinymce/tinymce.min.js"></script>

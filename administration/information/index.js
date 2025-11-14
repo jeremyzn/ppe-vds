@@ -10,7 +10,7 @@ import { configurerFormulaire, effacerLesErreurs, fichierValide, creerBoutonSupp
 const lesLignes = document.getElementById('lesLignes');
 const nb = document.getElementById('nb');
 const btnAjouter = document.getElementById('btnAjouter');
-const formContainer = document.getElementById('formContainer');
+const formModal = document.getElementById('formModal');
 const formTitle = document.getElementById('formTitle');
 const btnCancel = document.getElementById('btnCancel');
 const form = document.getElementById('formInfo');
@@ -19,6 +19,28 @@ const btnPickFile = document.getElementById('btnPickFile');
 const listeFichiers = document.getElementById('listeFichiersAssocies');
 
 configurerFormulaire();
+
+// Assistant pour la gestion de l'affichage de la liste des fichiers associés
+function montrerAucunFichier() {
+    if (!listeFichiers) return;
+    listeFichiers.innerHTML = '';
+    const tr = document.createElement('tr');
+    tr.id = 'placeholderNoFile';
+    const td = tr.insertCell();
+    td.colSpan = 2;
+    td.className = 'text-muted';
+    td.textContent = 'Aucun fichier';
+    listeFichiers.appendChild(tr);
+}
+
+function supprimerPlaceholderSiPresent() {
+    if (!listeFichiers) return;
+    const p = document.getElementById('placeholderNoFile');
+    if (p) p.remove();
+}
+
+// longueur max pour le titre affiché dans le tableau (tronque côté JS, n'affecte pas le CSS)
+const TITRE_MAX_LENGTH = 30;
 
 // style pour la ligne en cours d'édition
 function ensureEditingStyle() {
@@ -35,7 +57,7 @@ function ensureEditingStyle() {
 let currentEditingId = null;
 function setEditing(id) {
     ensureEditingStyle();
-    // clear previous
+    // effacer le précédent
     if (currentEditingId) {
         const prev = document.getElementById(String(currentEditingId));
         if (prev) prev.classList.remove('row-editing');
@@ -50,6 +72,19 @@ function setEditing(id) {
 // rendu du tableau à la manière des autres pages admin
 nb.innerText = (Array.isArray(lesInformations) ? lesInformations.length : 0);
 
+// Assistant : afficher un message quand il n'y a aucune information
+function montrerAucuneInformation() {
+    if (!lesLignes) return;
+    lesLignes.innerHTML = '';
+    const tr = document.createElement('tr');
+    tr.id = 'placeholderNoInfo';
+    const td = tr.insertCell();
+    td.colSpan = 7; // nombre de colonnes dans le tableau
+    td.className = 'text-muted';
+    td.textContent = 'Aucune information';
+    lesLignes.appendChild(tr);
+}
+
 function escapeHtml(str) {
     if (!str) return '';
     return String(str).replace(/[&<>"']/g, function (c) {
@@ -61,12 +96,38 @@ function creerLigne(info) {
     const tr = document.createElement('tr');
     tr.id = info.id;
 
-    // créer les cellules dans l'ordre attendu par l'en-tête : ID, Titre, Type, Auteur, Date, Actions
+    // créer les cellules dans l'ordre attendu par l'en-tête : ID, Titre, Type, Auteur, Date, Fichiers, Actions
     const tdId = tr.insertCell(); tdId.textContent = info.id;
-    const tdTitre = tr.insertCell(); tdTitre.textContent = escapeHtml(info.titre);
+    const tdTitre = tr.insertCell();
+    // tronquer le titre côté JS pour éviter le débordement dans le tableau
+    const rawTitle = info.titre || '';
+    const displayRaw = rawTitle.length > TITRE_MAX_LENGTH ? rawTitle.slice(0, TITRE_MAX_LENGTH) + '…' : rawTitle;
+    tdTitre.textContent = escapeHtml(displayRaw);
+    // attribut title pour voir le titre complet au survol
+    tdTitre.title = rawTitle;
     const tdType = tr.insertCell(); tdType.textContent = escapeHtml(info.type);
     const tdAuteur = tr.insertCell(); tdAuteur.textContent = escapeHtml(info.auteur);
-    const tdDate = tr.insertCell(); tdDate.textContent = escapeHtml(info.date_creation);
+
+    // date de mise à jour (ou création si jamais modifié)
+    const tdDate = tr.insertCell();
+    if (info.date_modif) {
+        const date = new Date(info.date_modif);
+        tdDate.textContent = date.toLocaleDateString('fr-FR', { timeZone: 'Europe/Paris' });
+    } else if (info.date_creation) {
+        const date = new Date(info.date_creation);
+        tdDate.textContent = date.toLocaleDateString('fr-FR', { timeZone: 'Europe/Paris' });
+    } else {
+        tdDate.textContent = '-';
+    }
+
+    // cellule fichiers
+    const tdFichiers = tr.insertCell();
+    if (typeof lesDocumentsInfo !== 'undefined' && lesDocumentsInfo[info.id]) {
+        const nbDocs = lesDocumentsInfo[info.id].length;
+        tdFichiers.textContent = nbDocs > 0 ? `${nbDocs} fichier${nbDocs > 1 ? 's' : ''}` : 'Aucun fichier';
+    } else {
+        tdFichiers.textContent = 'Aucun fichier';
+    }
 
     // cellule actions (dernière)
     const tdAction = tr.insertCell();
@@ -78,8 +139,8 @@ function creerLigne(info) {
     const btnMod = creerBoutonModification(() => ouvrirFormulaire(info.id));
     container.appendChild(btnMod);
 
-    // bouton supprimer
-    const supprimer = () => appelAjax({ url: '/administration/information/ajax/supprimer.php', data: { id: info.id }, success: () => tr.remove() });
+    // bouton supprimer (supprime l'information elle-même — utiliser l'API générique)
+    const supprimer = () => appelAjax({ url: '/ajax/supprimer.php', data: { table: 'Information', id: info.id }, success: () => location.reload() });
     const btnSup = creerBoutonSuppression(() => confirmer(supprimer));
     container.appendChild(btnSup);
 
@@ -89,21 +150,26 @@ function creerLigne(info) {
 }
 
 // construction initiale du tableau
-if (Array.isArray(lesInformations)) {
+if (Array.isArray(lesInformations) && lesInformations.length > 0) {
     for (const info of lesInformations) {
         lesLignes.appendChild(creerLigne(info));
     }
+} else {
+    montrerAucuneInformation();
 }
 
 // ouvre le formulaire et remplit les champs
 function ouvrirFormulaire(id = null) {
-    formContainer.style.display = 'block';
+    if (formModal) {
+        formModal.style.display = 'block';
+        formModal.setAttribute('aria-hidden', 'false');
+    }
     formTitle.innerText = id ? 'Modifier une information' : 'Ajouter une information';
 
     if (!id) {
         form.reset();
         if (tinymce) tinymce.get('contenu').setContent('');
-        listeFichiers.innerHTML = '';
+        montrerAucunFichier();
         setEditing(null);
         return;
     }
@@ -111,9 +177,9 @@ function ouvrirFormulaire(id = null) {
     // remplir depuis lesInformations
     const info = (Array.isArray(lesInformations) ? lesInformations.find(x => String(x.id) === String(id)) : null);
     if (info) {
-    document.getElementById('infoId').value = info.id;
-    document.getElementById('titre').value = info.titre;
-    document.getElementById('type').value = info.type;
+        document.getElementById('infoId').value = info.id;
+        document.getElementById('titre').value = info.titre;
+        document.getElementById('type').value = info.type;
         if (tinymce) tinymce.get('contenu').setContent(info.contenu || '');
     } else {
         // Les données sont normalement injectées côté serveur dans `lesInformations`.
@@ -126,25 +192,32 @@ function ouvrirFormulaire(id = null) {
     // documents associés via lesDocumentsInfo -> remplir le tableau
     listeFichiers.innerHTML = '';
     if (typeof lesDocumentsInfo !== 'undefined' && lesDocumentsInfo[id]) {
-        for (const doc of lesDocumentsInfo[id]) {
-            const tr = document.createElement('tr');
-            const tdAct = tr.insertCell();
-            const tdFic = tr.insertCell();
-            tdFic.textContent = doc.fichier;
-            const btn = creerBoutonSuppression(() => confirmer(() => {
-                appelAjax({ url: '/administration/information/ajax/supprimer.php', data: { id: doc.id }, success: () => tr.remove() });
-            }));
-            tdAct.appendChild(btn);
-            listeFichiers.appendChild(tr);
+        const docs = lesDocumentsInfo[id];
+        if (Array.isArray(docs) && docs.length > 0) {
+            for (const doc of docs) {
+                const tr = document.createElement('tr');
+                const tdAct = tr.insertCell();
+                const tdFic = tr.insertCell();
+                tdFic.textContent = doc.nom_original || doc.fichier;
+                const btn = creerBoutonSuppression(() => confirmer(() => {
+                    appelAjax({ url: '/administration/information/ajax/supprimer.php', data: { id: doc.id }, success: () => { tr.remove(); if (listeFichiers.rows.length === 0) montrerAucunFichier(); } });
+                }));
+                tdAct.appendChild(btn);
+                listeFichiers.appendChild(tr);
+            }
+        } else {
+            montrerAucunFichier();
         }
+    } else {
+        montrerAucunFichier();
     }
-    // highlight this row
+    // mettre en évidence cette ligne
     setEditing(id);
 }
 
 // events
 btnAjouter.onclick = () => ouvrirFormulaire(null);
-btnCancel.onclick = () => { formContainer.style.display = 'none'; setEditing(null); };
+btnCancel.onclick = () => { if (formModal) { formModal.style.display = 'none'; formModal.setAttribute('aria-hidden', 'true'); } setEditing(null); };
 
 btnPickFile.onclick = () => fichierInput.click();
 fichierInput.onchange = () => {
@@ -152,12 +225,22 @@ fichierInput.onchange = () => {
     const file = fichierInput.files[0];
     const params = { maxSize: 5 * 1024 * 1024, extensions: ['pdf'] };
     if (!fichierValide(file, params)) return;
-    const div = document.createElement('div');
-    div.textContent = file.name + ' ';
-    const btn = document.createElement('button');
-    btn.type = 'button'; btn.textContent = 'Supprimer'; btn.onclick = () => div.remove();
-    div.appendChild(btn);
-    listeFichiers.appendChild(div);
+
+    // Ajouter une ligne cohérente dans le tableau des fichiers associés
+    supprimerPlaceholderSiPresent();
+    const tr = document.createElement('tr');
+    const tdAct = tr.insertCell();
+    const tdFic = tr.insertCell();
+    tdFic.textContent = file.name;
+
+    // bouton suppression cohérent avec le style existant
+    const btn = creerBoutonSuppression(() => {
+        tr.remove();
+        if (listeFichiers.rows.length === 0) montrerAucunFichier();
+    });
+    tdAct.appendChild(btn);
+
+    listeFichiers.appendChild(tr);
 };
 
 form.onsubmit = function (e) {
@@ -181,5 +264,23 @@ form.onsubmit = function (e) {
 
 // TinyMCE init (comme les autres pages)
 if (typeof tinymce !== 'undefined') {
-    tinymce.init({ license_key: 'gpl', selector: '#contenu', menubar: false, plugins: 'link lists table code', toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | bullist numlist | link | code', height: 300, setup: function (editor) { editor.on('change', function () { /* synchronisation éventuelle */ }); } });
+    tinymce.init({
+        license_key: 'gpl',
+        selector: '#contenu',
+        menubar: false,
+        plugins: 'link lists table code image',
+        toolbar: 'undo redo | bold italic | forecolor backcolor | alignleft aligncenter alignright | bullist numlist | image | link | code',
+        height: 300,
+        automatic_uploads: true,
+        images_upload_url: '/administration/information/ajax/upload_image.php',
+        file_picker_types: 'image',
+        image_title: true,
+        /*
+         * TinyMCE s'attend à une réponse JSON de la forme { location : 'URL' }
+         * En cas d'erreur, renvoyer { error: { message: '...' } } et un code HTTP 4xx.
+         */
+        setup: function (editor) {
+            editor.on('change', function () { /* synchronisation éventuelle */ });
+        }
+    });
 }

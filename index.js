@@ -4,8 +4,8 @@
 // Import des fonctions nécessaires
 // -----------------------------------------------------------------------------------
 
-import {initialiserToutesLesCartes, basculerToutesLesCartes} from "/composant/fonction/openclose.js?";
-import {formatDateLong} from "/composant/fonction/date.js";
+import { initialiserToutesLesCartes, basculerToutesLesCartes } from "/composant/fonction/openclose.js?";
+import { formatDateLong } from "/composant/fonction/date.js";
 
 // -----------------------------------------------------------------------------------
 // Déclaration des variables globales
@@ -39,7 +39,7 @@ initialiserToutesLesCartes();
 // les informations
 
 // affichage de la prochaine épreuve
-dateEpreuve.innerText =  formatDateLong(prochaineEdition.date);
+dateEpreuve.innerText = formatDateLong(prochaineEdition.date);
 descriptionEpreuve.innerHTML = prochaineEdition.description;
 
 
@@ -59,18 +59,24 @@ if (typeof lesInformations !== 'undefined' && dernieresNouvelles) {
         dernieresNouvelles.innerHTML = '<div class="p-2 text-muted" style="padding-left: 10px;">Aucune information pour le moment.</div>';
     } else {
         // génération avec le même style visuel que les autres sections
+        // Ajout d'un bouton ouvrir/fermer par information (persisté dans localStorage)
         let html = '';
-        lesInformations.forEach((info) => {
-            // Créer un bloc pour chaque information sans la classe .lien (pour éviter le hover)
-            html += `<div style="display: block; text-align: left; margin-top: 4px; margin-left: 0.5rem; margin-right: 0.5rem; padding: 0.5rem; border: 1px solid #0790e4; background-color: #f8f9fa; border-radius: 0.25rem;">
+        lesInformations.forEach((info, idx) => {
+            const uid = info.id ? `info-${info.id}` : `info-${idx}`;
+            // Créer un bloc pour chaque information avec un toggle
+            html += `<div class="info-item" style="display: block; text-align: left; margin-top: 4px; margin-left: 0.5rem; margin-right: 0.5rem; padding: 0.5rem; border: 1px solid #0790e4; background-color: #f8f9fa; border-radius: 0.25rem;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                     <strong style="color: #0790e4; font-size: 1.1em;">${info.titre}</strong>
-                    <span class="badge bg-secondary" style="font-size: 0.75em;">${info.type}</span>
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        <span class="badge bg-secondary" style="font-size: 0.75em;">${info.type}</span>
+                        <button class="toggle-news btn btn-sm btn-outline-secondary" data-target="${uid}" aria-expanded="true" style="font-size:0.8rem;">▲</button>
+                    </div>
                 </div>
-                <div class="content-html" style="margin-bottom: 8px;">${info.contenu}</div>
-                <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #dee2e6; padding-top: 6px;">
-                    <small class="text-muted">Publié par ${info.auteur || 'INCONNU'}</small>
-                    <div class="doc-actions">`;
+                <div id="${uid}" class="content-html" style="margin-bottom: 8px;">
+                    ${info.contenu}
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #dee2e6; padding-top: 6px;">
+                        <small class="text-muted">Publié par ${info.auteur || 'INCONNU'}</small>
+                        <div class="doc-actions">`;
             if (info.documents && info.documents.length > 0) {
                 info.documents.forEach(doc => {
                     // Nettoyer le nom du fichier pour l'affichage (enlever le timestamp si présent)
@@ -80,15 +86,43 @@ if (typeof lesInformations !== 'undefined' && dernieresNouvelles) {
                 });
             }
             html += `</div>
+                    </div>
                 </div>
             </div>`;
         });
         dernieresNouvelles.innerHTML = html;
+
         // rendre les images responsives si présentes dans le contenu
         dernieresNouvelles.querySelectorAll('.content-html img').forEach(img => {
             img.classList.add('img-fluid');
             img.style.maxWidth = '100%';
             img.style.height = 'auto';
+        });
+
+        // Gestion des toggles par information avec persistance
+        const KEY_ETAT_NOUV = 'etatNouvelles';
+        const etatsNouv = JSON.parse(localStorage.getItem(KEY_ETAT_NOUV)) || {};
+        dernieresNouvelles.querySelectorAll('.toggle-news').forEach(btn => {
+            const targetId = btn.getAttribute('data-target');
+            const contenu = document.getElementById(targetId);
+            if (!contenu) return;
+
+            // Restaurer l'état si présent
+            const ouvert = etatsNouv[targetId] !== undefined ? etatsNouv[targetId] : true;
+            contenu.style.display = ouvert ? '' : 'none';
+            btn.innerText = ouvert ? '▲' : '▼';
+            btn.setAttribute('aria-expanded', ouvert ? 'true' : 'false');
+
+            btn.onclick = (e) => {
+                e.stopPropagation();
+                const visible = window.getComputedStyle(contenu).display !== 'none';
+                const afficher = !visible;
+                contenu.style.display = afficher ? '' : 'none';
+                btn.innerText = afficher ? '▲' : '▼';
+                btn.setAttribute('aria-expanded', afficher ? 'true' : 'false');
+                etatsNouv[targetId] = afficher;
+                localStorage.setItem(KEY_ETAT_NOUV, JSON.stringify(etatsNouv));
+            };
         });
     }
 }

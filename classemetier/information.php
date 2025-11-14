@@ -29,7 +29,7 @@ class Information extends Table
         $input->MaxLength = 255;
         $this->columns['titre'] = $input;
 
-    // (chapeau retiré - champ non requis par le cahier des charges)
+        // (chapeau retiré - champ non requis par le cahier des charges)
 
         // contenu (rich text)
         $input = new InputTextarea();
@@ -66,8 +66,8 @@ class Information extends Table
      */
     public static function getAll(): array
     {
-    // inclure le contenu pour permettre le préremplissage du formulaire d'édition en backoffice
-    $sql = "SELECT id, titre, contenu, type, auteur, date_creation FROM information ORDER BY date_creation DESC";
+        // inclure le contenu pour permettre le préremplissage du formulaire d'édition en backoffice
+        $sql = "SELECT id, titre, contenu, type, auteur, date_creation, date_modif FROM information ORDER BY date_creation DESC";
         $select = new Select();
         return $select->getRows($sql);
     }
@@ -94,5 +94,32 @@ class Information extends Table
         $sql = "SELECT id, fichier, nom_original, date_upload FROM documentinformation WHERE idInformation = :idInformation";
         $select = new Select();
         return $select->getRows($sql, ['idInformation' => $idInformation]);
+    }
+
+    /**
+     * Supprime une information et tous les documents associés (fichiers physiques + enregistrements)
+     * @param int|string $id
+     */
+    public function delete(int|string $id): void
+    {
+        $db = Database::getInstance();
+
+        // Récupérer les documents associés
+        $stmt = $db->prepare('SELECT id, fichier FROM documentinformation WHERE idInformation = :idInformation');
+        $stmt->execute(['idInformation' => $id]);
+        $docs = $stmt->fetchAll();
+
+        // Supprimer les fichiers physiques et leurs enregistrements
+        foreach ($docs as $doc) {
+            $path = self::DIR . '/' . $doc['fichier'];
+            if (is_file($path)) {
+                @unlink($path);
+            }
+            $del = $db->prepare('DELETE FROM documentinformation WHERE id = :id');
+            $del->execute(['id' => $doc['id']]);
+        }
+
+        // Supprimer l'enregistrement d'information
+        parent::delete($id);
     }
 }
