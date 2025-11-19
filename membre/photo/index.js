@@ -5,15 +5,14 @@
 // -----------------------------------------------------------------------------------
 
 import {appelAjax} from "/composant/fonction/ajax.js";
-import {afficherToast,} from "/composant/fonction/afficher.js";
+import {afficherToast} from "/composant/fonction/afficher.js";
 import {configurerFormulaire, fichierValide, verifierImage, effacerLesErreurs} from "/composant/fonction/formulaire.js";
-import {initialiserMenuHorizontal} from "/composant/menuhorizontal/menu.js";
 
 // -----------------------------------------------------------------------------------
 // Déclaration des variables globales
 // -----------------------------------------------------------------------------------
 
-/*global lesParametres, photo, lesOptions */
+/*global lesParametres, photo */
 
 const msg = document.getElementById('msg');
 const cible = document.getElementById('cible');
@@ -114,8 +113,6 @@ function supprimer() {
 // -----------------------------------------------------------------------------------
 // Programme principal
 // -----------------------------------------------------------------------------------
-
-initialiserMenuHorizontal(lesOptions);
 
 configurerFormulaire();
 
