@@ -5,8 +5,5 @@
 vendor/
 composer.lock
 
-# Ignorer les répertoires suivants
-
 # Ignorer les fichiers suivants
-
 backoffice\.log\evenement.log
