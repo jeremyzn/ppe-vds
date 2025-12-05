@@ -152,10 +152,10 @@ class Information extends Table
     }
 
     /**
-     * Supprime un document orphelin (fichier physique introuvable)
+     * Supprime l'enregistrement d'un document en base de données
      * @param int $id
      */
-    public static function deleteDocumentOrphelin(int $id): void
+    public static function supprimerEnregistrement(int $id): void
     {
         $db = Database::getInstance();
         $stmt = $db->prepare('DELETE FROM documentinformation WHERE id = :id');
@@ -167,7 +167,7 @@ class Information extends Table
      * @param int $id
      * @return bool true si le document a été supprimé, false si non trouvé
      */
-    public static function deleteDocument(int $id): bool
+    public static function supprimerDocument(int $id): bool
     {
         $doc = self::getDocumentById($id);
         if (!$doc) {
@@ -181,7 +181,7 @@ class Information extends Table
         }
 
         // Suppression en base de données
-        self::deleteDocumentOrphelin($id);
+        self::supprimerEnregistrement($id);
         return true;
     }
 
@@ -192,7 +192,7 @@ class Information extends Table
      * @param string $nomOriginal Nom original du fichier
      * @return int ID du document créé
      */
-    public static function addDocument(string $fichier, int $idInformation, string $nomOriginal): int
+    public static function ajouterDocument(string $fichier, int $idInformation, string $nomOriginal): int
     {
         $db = Database::getInstance();
         $sql = "INSERT INTO documentinformation (fichier, idInformation, nom_original) VALUES (:fichier, :idInformation, :nom_original)";

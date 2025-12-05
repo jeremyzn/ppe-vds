@@ -23,7 +23,7 @@ $id = (int) $_POST['id'];
 // RÉCUPÉRATION ET SUPPRESSION
 // ============================================================================
 
-if (!Information::deleteDocument($id)) {
+if (!Information::supprimerDocument($id)) {
 	Erreur::envoyerReponse('Document introuvable', 'global');
 }
 

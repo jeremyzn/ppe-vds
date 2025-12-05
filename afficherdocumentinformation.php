@@ -62,7 +62,7 @@ if (!is_file($cheminFichier)) {
     // Nettoyage automatique : suppression de l'enregistrement orphelin
     Journal::enregistrer("Suppression automatique du document id=$idDoc (fichier physique introuvable: $fichier)");
 
-    Information::deleteDocumentOrphelin($idDoc);
+    Information::supprimerEnregistrement($idDoc);
 
     Erreur::afficherReponse("Le document demandé n'a pas été trouvé.", 'global');
 }

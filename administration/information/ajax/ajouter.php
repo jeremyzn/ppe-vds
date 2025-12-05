@@ -81,7 +81,7 @@ foreach ($uploadedFiles as $f) {
 	}
 
 	// Insertion en base de données via la classe métier
-	$id = Information::addDocument($file->Value, $idInformation, $f['name']);
+	$id = Information::ajouterDocument($file->Value, $idInformation, $f['name']);
 	$results[] = ['id' => $id, 'fichier' => $file->Value, 'nom_original' => $f['name']];
 }
 
