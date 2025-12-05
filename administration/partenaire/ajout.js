@@ -100,7 +100,7 @@ function ajouter() {
         url: 'ajax/ajouter.php',
         data: formData,
         success: () => {
-            retournerVers("Partenaire ajouté", '..');
+            retournerVers("Partenaire ajouté", 'index.php');
         },
         error: (message) => {
             afficherSousLeChamp('global', message);
