@@ -6,13 +6,28 @@
         <button id="btnFermerToutes" class="btn btn-sm btn-danger">Tout fermer</button>
     </div>
 </div>
+
 <div class="flex-container">
     <div class="flex-column">
         <div class="card mb-1">
-            <div class="card-header entete">Derniers résultats</div>
-            <div id='detailClassement' style="display: none; padding-bottom:10px"></div>
+            <div class="card-header entete">Dernières Nouvelles</div>
+            <div class="" style="display: none; padding-bottom:10px">
+                <div id='information' style="padding-bottom:10px"></div>
+            </div>
         </div>
 
+        <div class="card mb-1">
+            <div class="card-header entete">S'inscrire en ligne sur nos épreuves</div>
+            <div class="" style="display: none; padding-bottom:10px">
+                <a class='lien' href="/inscription/">S'incrire aux épreuves</a>
+                <span id="Inscription"></span>
+            </div>
+        </div>
+
+        <div class="card mb-1">
+            <div class="card-header entete">Derniers Résultats</div>
+            <div id='detailClassement' style="display: none; padding-bottom:10px"></div>
+        </div>
 
         <div class="card mb-1">
             <div class="card-header entete">Informations utiles</div>
@@ -23,19 +38,43 @@
                 <span id="documentPublic"></span>
             </div>
         </div>
-        <div class="card mb-1">
-            <div class="card-header entete">Dernières nouvelles</div>
-            <div id="dernieres-nouvelles" style="display: none; padding-bottom:10px"></div>
-        </div>
     </div>
+
     <div class="flex-column">
         <div class="card mb-1">
             <div class="card-header entete">Le Club</div>
             <div class="" style="display: none; padding-bottom:10px">
-                <a class="lien" href="/club">Présentation</a>
+                <a class="lien" href="/club/presentation">Présentation</a>
+                <a class="lien" href="/club/agenda">Agenda</a>
                 <span id="documentClub"></span>
             </div>
         </div>
+        <!-- SECTION MEMBRE - AFFICHÉE UNIQUEMENT SI CONNECTÉ -->
+        <?php if (isset($_SESSION['membre'])): ?>
+        <div class="card mb-1">
+            <div class="card-header entete">Membre</div>
+            <div id='documentMembre' style="display: none; padding-bottom:10px"></div>
+        </div>
+        <?php endif; ?>
+        <!-- FIN SECTION MEMBRE -->
+
+        <div class="card mb-1">
+            <div class="card-header entete">Les Partenaires</div>
+            <div class="partenaires-container" style="display: none; padding-bottom:8px">
+                <!-- Chaque image est maintenant un lien vers le site du partenaire. Ouvre dans un nouvel onglet. -->
+                <a class='lien' href="https://www.amiens.fr" target="_blank" rel="noopener noreferrer" title="Amiens"><img class="partenaire-logo" src="data/partenaire/partenaire/amiens.png" alt="Amiens" /></a>
+                <a class='lien' href="https://www.somme.fr" target="_blank" rel="noopener noreferrer" title="Conseil départemental de la Somme"><img class="partenaire-logo" src="data/partenaire/partenaire/cd80.png" alt="CD80" /></a>
+                <a class='lien' href="https://www.athle.fr" target="_blank" rel="noopener noreferrer" title="Fédération Française d'Athlétisme"><img class="partenaire-logo" src="data/partenaire/partenaire/ffa.png" alt="FFA" /></a>
+                <a class='lien' href="https://www.klikego.com/" target="_blank" rel="noopener noreferrer" title="Klikego"><img class="partenaire-logo" src="data/partenaire/partenaire/klikego.jpg" alt="Klikego" /></a>
+                <a class='lien' href="https://www.running.fr" target="_blank" rel="noopener noreferrer" title="Running"><img class="partenaire-logo" src="data/partenaire/partenaire/running.jpg" alt="Running" /></a>
+                <a class='lien' href="https://www.amiens.fr/Vivre-a-Amiens/Sport/AMIENS-SE-PREND-AU-JEU" target="_blank" rel="noopener noreferrer" title="Amiens se prend au jeu 2024"><img class="partenaire-logo" src="data/partenaire/partenaire/amiensseprendaujeu2024.png" alt="Amiens se prend au jeu 2024" /></a>
+                <a class='lien' href="https://www.somme.fr" target="_blank" rel="noopener noreferrer" title="Somme"><img class="partenaire-logo" src="data/partenaire/partenaire/somme.png" alt="Somme" /></a>
+                <a class='lien' href="https://www.courses80.fr" target="_blank" rel="noopener noreferrer" title="Courses80"><img class="partenaire-logo" src="data/partenaire/partenaire/courses80.png" alt="Courses80" /></a>
+                <a class='lien' href="https://www.hautsdefrance.fr/" target="_blank" rel="noopener noreferrer" title="Haut de France"><img class="partenaire-logo" src="data/partenaire/partenaire/hautdefrance.png" alt="Haut de France" /></a>
+            </div>
+        </div>
+
+
         <div class="card mb-1">
             <div class="card-header entete">Les 4 saisons</div>
             <div class="" style="display: none; padding-bottom:10px">
@@ -62,3 +101,4 @@
 <div class="py-2">
     <div id='detailPartenaire' class="d-flex justify-content-evenly "></div>
 </div>
+<script src="index.js"></script>
