@@ -66,8 +66,6 @@ if (empty($uploadedFiles)) {
 // TRAITEMENT ET ENREGISTREMENT DES FICHIERS
 // ============================================================================
 
-$db = Database::getInstance();
-$sql = "INSERT INTO documentinformation (fichier, idInformation, nom_original) VALUES (:fichier, :idInformation, :nom_original)";
 $results = [];
 
 foreach ($uploadedFiles as $f) {
@@ -82,14 +80,8 @@ foreach ($uploadedFiles as $f) {
 		Erreur::envoyerReponse($file->getValidationMessage(), 'fichier');
 	}
 
-	// Insertion en base de données
-	$stmt = $db->prepare($sql);
-	$stmt->execute([
-		'fichier' => $file->Value,
-		'idInformation' => $idInformation,
-		'nom_original' => $f['name']
-	]);
-	$id = (int) $db->lastInsertId();
+	// Insertion en base de données via la classe métier
+	$id = Information::addDocument($file->Value, $idInformation, $f['name']);
 	$results[] = ['id' => $id, 'fichier' => $file->Value, 'nom_original' => $f['name']];
 }
 

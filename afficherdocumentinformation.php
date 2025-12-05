@@ -28,8 +28,7 @@ if (!preg_match('/^[0-9]+$/', $id)) {
 // RÉCUPÉRATION DU DOCUMENT
 // ============================================================================
 
-$select = new Select();
-$document = $select->getRow('SELECT id, fichier, nom_original, idInformation FROM documentinformation WHERE id = :id', ['id' => $id]);
+$document = Information::getDocumentById((int) $id);
 
 if (!$document) {
     Erreur::afficherReponse("Le document demandé n'existe pas", 'global');
@@ -44,7 +43,7 @@ $idInformation = $document['idInformation'];
 // CONTRÔLE D'ACCÈS (documents privés)
 // ============================================================================
 
-$information = $select->getRow('SELECT type FROM information WHERE id = :id', ['id' => $idInformation]);
+$information = Information::getType((int) $idInformation);
 
 if (!$information) {
     Erreur::afficherReponse("L'information associée au document n'existe plus.", 'global');
@@ -63,9 +62,7 @@ if (!is_file($cheminFichier)) {
     // Nettoyage automatique : suppression de l'enregistrement orphelin
     Journal::enregistrer("Suppression automatique du document id=$idDoc (fichier physique introuvable: $fichier)");
 
-    $db = Database::getInstance();
-    $stmt = $db->prepare('DELETE FROM documentinformation WHERE id = :id');
-    $stmt->execute(['id' => $idDoc]);
+    Information::deleteDocumentOrphelin($idDoc);
 
     Erreur::afficherReponse("Le document demandé n'a pas été trouvé.", 'global');
 }

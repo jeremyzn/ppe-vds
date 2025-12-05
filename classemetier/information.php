@@ -122,4 +122,86 @@ class Information extends Table
         // Supprimer l'enregistrement d'information
         parent::delete($id);
     }
+
+    // =========================================================================
+    // MÉTHODES POUR LA GESTION DES DOCUMENTS
+    // =========================================================================
+
+    /**
+     * Récupère un document par son id
+     * @param int $id
+     * @return array|false
+     */
+    public static function getDocumentById(int $id)
+    {
+        $sql = "SELECT id, fichier, nom_original, idInformation FROM documentinformation WHERE id = :id";
+        $select = new Select();
+        return $select->getRow($sql, ['id' => $id]);
+    }
+
+    /**
+     * Récupère le type d'une information (Publique/Privée)
+     * @param int $id
+     * @return array|false
+     */
+    public static function getType(int $id)
+    {
+        $sql = "SELECT type FROM information WHERE id = :id";
+        $select = new Select();
+        return $select->getRow($sql, ['id' => $id]);
+    }
+
+    /**
+     * Supprime un document orphelin (fichier physique introuvable)
+     * @param int $id
+     */
+    public static function deleteDocumentOrphelin(int $id): void
+    {
+        $db = Database::getInstance();
+        $stmt = $db->prepare('DELETE FROM documentinformation WHERE id = :id');
+        $stmt->execute(['id' => $id]);
+    }
+
+    /**
+     * Supprime un document (fichier physique + enregistrement)
+     * @param int $id
+     * @return bool true si le document a été supprimé, false si non trouvé
+     */
+    public static function deleteDocument(int $id): bool
+    {
+        $doc = self::getDocumentById($id);
+        if (!$doc) {
+            return false;
+        }
+
+        // Suppression du fichier physique
+        $path = self::DIR . '/' . $doc['fichier'];
+        if (is_file($path)) {
+            @unlink($path);
+        }
+
+        // Suppression en base de données
+        self::deleteDocumentOrphelin($id);
+        return true;
+    }
+
+    /**
+     * Ajoute un document pour une information
+     * @param string $fichier Nom du fichier stocké
+     * @param int $idInformation ID de l'information
+     * @param string $nomOriginal Nom original du fichier
+     * @return int ID du document créé
+     */
+    public static function addDocument(string $fichier, int $idInformation, string $nomOriginal): int
+    {
+        $db = Database::getInstance();
+        $sql = "INSERT INTO documentinformation (fichier, idInformation, nom_original) VALUES (:fichier, :idInformation, :nom_original)";
+        $stmt = $db->prepare($sql);
+        $stmt->execute([
+            'fichier' => $fichier,
+            'idInformation' => $idInformation,
+            'nom_original' => $nomOriginal
+        ]);
+        return (int) $db->lastInsertId();
+    }
 }

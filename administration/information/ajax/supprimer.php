@@ -23,21 +23,8 @@ $id = (int) $_POST['id'];
 // RÉCUPÉRATION ET SUPPRESSION
 // ============================================================================
 
-$select = new Select();
-$doc = $select->getRow('SELECT fichier FROM documentinformation WHERE id = :id', ['id' => $id]);
-if (!$doc) {
+if (!Information::deleteDocument($id)) {
 	Erreur::envoyerReponse('Document introuvable', 'global');
 }
-
-// Suppression du fichier physique
-$path = RACINE . '/data/documentinformation/' . $doc['fichier'];
-if (is_file($path)) {
-	@unlink($path);
-}
-
-// Suppression en base de données
-$db = Database::getInstance();
-$stmt = $db->prepare('DELETE FROM documentinformation WHERE id = :id');
-$stmt->execute(['id' => $id]);
 
 echo json_encode(['success' => true], JSON_UNESCAPED_UNICODE);
