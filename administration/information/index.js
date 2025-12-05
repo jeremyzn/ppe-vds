@@ -42,8 +42,8 @@ function montrerAucunFichier() {
     const tr = document.createElement('tr');
     tr.id = 'placeholderNoFile';
     const td = tr.insertCell();
-    td.colSpan = 2;
-    td.className = 'text-muted';
+    td.colSpan = 4;
+    td.className = 'text-muted text-center';
     td.textContent = 'Aucun fichier';
     listeFichiers.appendChild(tr);
 }
@@ -98,7 +98,7 @@ function montrerAucuneInformation() {
     const tr = document.createElement('tr');
     tr.id = 'placeholderNoInfo';
     const td = tr.insertCell();
-    td.colSpan = 7;
+    td.colSpan = 8;
     td.className = 'text-center text-muted py-4';
     td.innerHTML = '<i class="bi bi-inbox me-2"></i>Aucune information pour le moment';
     lesLignes.appendChild(tr);
@@ -139,16 +139,24 @@ function creerLigne(info) {
     tdAuteur.textContent = escapeHtml(info.auteur);
     tdAuteur.className = 'align-middle';
 
+    // Date de création
+    const tdCreation = tr.insertCell();
+    tdCreation.className = 'text-center align-middle';
+    if (info.date_creation) {
+        const dateCreation = new Date(info.date_creation);
+        tdCreation.textContent = dateCreation.toLocaleDateString('fr-FR');
+    } else {
+        tdCreation.textContent = '-';
+    }
+
+    // Dernière modification
     const tdDate = tr.insertCell();
     tdDate.className = 'text-center align-middle';
     if (info.date_modif) {
         const date = new Date(info.date_modif);
-        tdDate.textContent = date.toLocaleDateString('fr-FR', { timeZone: 'Europe/Paris' });
-    } else if (info.date_creation) {
-        const date = new Date(info.date_creation);
-        tdDate.textContent = date.toLocaleDateString('fr-FR', { timeZone: 'Europe/Paris' });
+        tdDate.textContent = date.toLocaleDateString('fr-FR');
     } else {
-        tdDate.textContent = '-';
+        tdDate.innerHTML = '<span class="text-muted">Aucune modification</span>';
     }
 
     const tdFichiers = tr.insertCell();
@@ -234,9 +242,36 @@ function ouvrirFormulaire(id = null) {
         if (Array.isArray(docs) && docs.length > 0) {
             for (const doc of docs) {
                 const tr = document.createElement('tr');
-                const tdAct = tr.insertCell();
+
+                // Colonne Voir
+                const tdVoir = tr.insertCell();
+                tdVoir.className = 'text-center align-middle';
+                const btnVoir = document.createElement('a');
+                btnVoir.href = '/afficherdocumentinformation.php?id=' + doc.id;
+                btnVoir.target = '_blank';
+                btnVoir.className = 'btn btn-sm btn-outline-primary';
+                btnVoir.innerHTML = '<i class="bi bi-eye"></i>';
+                btnVoir.title = 'Voir le document';
+                tdVoir.appendChild(btnVoir);
+
+                // Colonne Nom
                 const tdFic = tr.insertCell();
                 tdFic.textContent = doc.nom_original || doc.fichier;
+                tdFic.className = 'align-middle';
+
+                // Colonne Date
+                const tdDate = tr.insertCell();
+                tdDate.className = 'text-center align-middle';
+                if (doc.date_upload) {
+                    const date = new Date(doc.date_upload);
+                    tdDate.textContent = date.toLocaleDateString('fr-FR');
+                } else {
+                    tdDate.textContent = '-';
+                }
+
+                // Colonne Action (supprimer)
+                const tdAct = tr.insertCell();
+                tdAct.className = 'text-center align-middle';
                 tr.dataset.docId = doc.id;
                 const btn = creerBoutonSuppression(() => {
                     if (!documentsASupprimer.includes(doc.id)) {
@@ -305,9 +340,25 @@ fichierInput.onchange = () => {
         const tr = document.createElement('tr');
         tr.dataset.filename = file.name;
         tr.dataset.filesize = file.size;
-        const tdAct = tr.insertCell();
+
+        // Colonne Voir (vide pour les nouveaux fichiers)
+        const tdVoir = tr.insertCell();
+        tdVoir.className = 'text-center align-middle text-muted';
+        tdVoir.innerHTML = '<i class="bi bi-hourglass" title="Disponible après enregistrement"></i>';
+
+        // Colonne Nom
         const tdFic = tr.insertCell();
         tdFic.textContent = file.name;
+        tdFic.className = 'align-middle';
+
+        // Colonne Date (nouvelle)
+        const tdDate = tr.insertCell();
+        tdDate.className = 'text-center align-middle text-muted';
+        tdDate.textContent = 'Nouveau';
+
+        // Colonne Action
+        const tdAct = tr.insertCell();
+        tdAct.className = 'text-center align-middle';
 
         const btn = creerBoutonSuppression(() => {
             fichiersEnAttente = fichiersEnAttente.filter(f => !(f.name === file.name && f.size === file.size));
