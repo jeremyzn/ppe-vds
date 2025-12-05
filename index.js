@@ -72,7 +72,7 @@ if (typeof lesInformations !== 'undefined' && dernieresNouvelles) {
             // ne pas afficher le libellé 'Publique' ; afficher le type seulement s'il n'est pas 'Publique'
             let badgeHtml = '';
             if (isNew) {
-                badgeHtml = `<span class="badge bg-danger" style="font-size: 0.75em;">Nouveau</span>`;
+                badgeHtml = `<span class="badge bg-success" style="font-size: 0.75em;">Nouveau</span>`;
             } else if (info.type && info.type !== 'Publique') {
                 badgeHtml = `<span class="badge bg-secondary" style="font-size: 0.75em;">${info.type}</span>`;
             }
