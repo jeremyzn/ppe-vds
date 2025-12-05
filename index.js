@@ -11,7 +11,7 @@ import {formatDateLong} from "/composant/fonction/date.js";
 // Déclaration des variables globales
 // -----------------------------------------------------------------------------------
 
-/* global prochaineEdition, lesClassements, lesDocuments,*/
+/* global prochaineEdition, lesClassements, lesDocuments*/
 
 // Récupération des éléments de l'interface
 const detailClassement = document.getElementById('detailClassement');
@@ -19,9 +19,10 @@ const dateEpreuve = document.getElementById('dateEpreuve');
 const descriptionEpreuve = document.getElementById('descriptionEpreuve');
 const btnOuvrirToutes = document.getElementById('btnOuvrirToutes');
 const btnFermerToutes = document.getElementById('btnFermerToutes');
-const documentPublic = document.getElementById('documentPublic');
+const documentPublicEtMembre = document.getElementById('documentPublicEtMembre');
 const document4Saisons = document.getElementById('document4Saisons');
 const documentClub = document.getElementById('documentClub');
+
 
 // -----------------------------------------------------------------------------------
 // Procédures évènementielles
@@ -55,25 +56,21 @@ for (const element of lesClassements) {
 }
 
 
-
+//afficher les documents
 for (const doc of lesDocuments) {
     let a = document.createElement('a');
     a.classList.add('lien'),
         a.href = "/afficher.php?id=" + doc.id;
     a.innerText = doc.titre;
     switch (doc.type) {
-        case 'Public':
-            documentPublic.appendChild(a);
-            break;
         case '4 saisons':
             document4Saisons.appendChild(a);
             break;
         case 'Club':
             documentClub.appendChild(a);
             break;
-        case 'Membre':
-            documentPublic.appendChild(a);
-            break;
+        default :
+            documentPublicEtMembre.appendChild(a);
     }
 }
 

@@ -89,10 +89,28 @@ class Document extends Table
      */
     public static function getAll(): array
     {
-        $sql = "Select id, titre,type, fichier  from document;";
+        $sql = "Select id, titre,type, fichier  from document order by titre;";
         $select = new Select();
         $lesLignes = $select->getRows($sql);
         // ajout d'une colonne permettant de vérifier l'existence du logo
+        foreach ($lesLignes as &$ligne) {
+            $chemin = self::DIR . '/' . $ligne['fichier'];
+            $ligne['present'] = is_file($chemin) ? 1 : 0;
+        }
+        return $lesLignes;
+    }
+
+    public static function getVisible(): array|false
+    {
+        $select = new Select();
+        if (isset($_SESSION['membre'])) {
+            // utilisateur connecté : tous les documents
+            $sql = "SELECT id, titre, type, fichier FROM document ORDER BY titre;";
+        } else {
+            // non connecté : exclure les documents réservés aux membres
+            $sql = "SELECT id, titre, type, fichier FROM document WHERE type not in ('Membre')  ORDER BY titre;";
+        }
+        $lesLignes = $select->getRows($sql);
         foreach ($lesLignes as &$ligne) {
             $chemin = self::DIR . '/' . $ligne['fichier'];
             $ligne['present'] = is_file($chemin) ? 1 : 0;
@@ -113,30 +131,6 @@ class Document extends Table
         SQL;
         $select = new Select();
         return $select->getRow($sql, ['id' => $id]);
-    }
-
-    public static function getByType(string $type): array|false
-    {
-        $sql = <<<SQL
-         select id, fichier, titre from document where type = :type;
-        SQL;
-        $select = new Select();
-        return $select->getRows($sql, ['type' => $type]);
-    }
-
-    public static function getAllButMembre(): array|false
-    {
-        $sql = <<<SQL
-         select id, fichier, titre from document where type = 'Public' || type = '4 saisons' || type = 'Club';
-        SQL;
-        $select = new Select();
-        $lesLignes = $select->getRows($sql);
-        // ajout d'une colonne permettant de vérifier l'existence du logo
-        foreach ($lesLignes as &$ligne) {
-            $chemin = self::DIR . '/' . $ligne['fichier'];
-            $ligne['present'] = is_file($chemin) ? 1 : 0;
-        }
-        return $lesLignes;
     }
     // ------------------------------------------------------------------------------------------------
 

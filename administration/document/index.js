@@ -8,6 +8,39 @@
 
 const lesLignes = document.getElementById('lesLignes');
 
+
+// -----------------------------------------------------------------------------------
+// Fonctions de traitement
+// -----------------------------------------------------------------------------------
+
+/**
+ * Demande de suppression
+ * @param {int} id id de l'enregistrement
+ */
+function supprimer(id) {
+    appelAjax({
+        url: 'ajax/supprimer.php',
+        data: { id: id  },
+        success: () => document.getElementById(id.toString())?.remove()
+    });
+}
+
+/**
+ * Remplace le fichier sur le serveur
+ * @param file
+ */
+function remplacer(file) {
+    // transfert du fichier vers le serveur dans le répertoire sélectionné
+    const formData = new FormData();
+    formData.append('fichier', file);
+    formData.append('nomFichier', nomFichier);
+    appelAjax({
+        url: 'ajax/remplacer.php',
+        data: formData,
+        success: () => afficherToast("Opération réalisée avec succès")
+    });
+}
+
 // -----------------------------------------------------------------------------------
 // Programme principal
 // -----------------------------------------------------------------------------------
@@ -58,11 +91,18 @@ for (const element of lesDocuments) {
     td.appendChild(sep2);
 
     let sup = document.createElement('a');
-    sup.href = 'supprimer.php?id=' + element.id; // adapter l'URL de suppression
+    sup.href = '#';
     sup.target = '_self';
     sup.innerText = '❌';
     sup.className = 'sup-link';
+    sup.style.cursor = 'pointer';
+    sup.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (confirm("Confirmer la suppression ?")) supprimer(element.id);
+    });
     td.appendChild(sup);
+
+
     // colonne : le titre du document
     tr.insertCell().innerText = element.titre;
     // colonne : le type de document
