@@ -709,13 +709,11 @@ output {
 /* personnalisation popover */
 
 .popover-body .contenu-popover {
-    font-size: 0.6rem;
-!important;
+    font-size: 0.6rem !important;
 }
 
 .tooltip-inner {
-    font-size: 0.6rem;
-!important;
+    font-size: 0.6rem !important;
 }
 
 /* Styles pour le smartphone */
@@ -813,5 +811,46 @@ output {
 
     .link {
         font-size: 16px; /* Réduire la taille de la police sur les petits écrans */
+    }
+}
+
+
+/* animations pour les logos partenaires */
+.partenaire-img {
+    max-height: 100px;
+    height: auto;
+    display: block;
+    opacity: 0;
+    transform: translateY(12px) scale(.98);
+    transition: opacity .45s ease, transform .45s cubic-bezier(.2,.9,.3,1), box-shadow .25s ease;
+    will-change: opacity, transform;
+}
+
+.partenaire-img.in-view {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.partenaire-img.pop {
+    animation: pop .5s cubic-bezier(.2,.9,.3,1);
+}
+
+.partenaire-img:hover {
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+}
+
+/* keyframes */
+@keyframes pop {
+    0%   { opacity: 0; transform: translateY(12px) scale(.98); }
+    60%  { transform: translateY(-6px) scale(1.03); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* respecter préférence reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .partenaire-img, .partenaire-img.in-view, .partenaire-img.pop {
+        transition: none !important;
+        animation: none !important;
     }
 }

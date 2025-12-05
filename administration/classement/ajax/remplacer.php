@@ -4,7 +4,7 @@ require $_SERVER['DOCUMENT_ROOT'] . '/include/autoload.php';
 
 // contrôle de l'existence des paramètres attendus
 if (!isset($_FILES['fichier'], $_POST['nomFichier'])) {
- Erreur::envoyerReponse("Paramètre manquant", 'global');
+    Erreur::envoyerReponse("Paramètre manquant", 'global');
 }
 
 // Récupération des paramètres du téléversement

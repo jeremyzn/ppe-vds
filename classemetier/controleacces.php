@@ -27,6 +27,7 @@ class ControleAcces
             self::verifierAccesMembre();
         }
 
+    
     }
 
     /**
@@ -67,7 +68,6 @@ class ControleAcces
             // Erreur::traiterReponse("Vous devez être connecté pour accéder à votre espace", 'global');
         }
     }
-
 
     /**
      * Redirige vers la page de connexion en mémorisant l'URL demandée dans la session

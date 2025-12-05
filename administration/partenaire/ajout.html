@@ -1,0 +1,29 @@
+
+<div class="formulaire">
+    <div id="msg"></div>
+
+    <label for="nom" class="obligatoire">Nom du partenaire</label>
+    <input id='nom' type="text"
+           required
+           pattern="^[0-9A-Za-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ](?:[,' \-]?[0-9A-Za-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ])*$"
+           minlength="2"
+           maxlength="100">
+
+    <label for="url" class="">URL du site</label>
+    <input id='url' type="url"
+           required
+           pattern="https?://.+\..+"
+           placeholder="https://example.com">
+
+    <label for="nomLogo" class=''>Logo</label>
+    <div class="groupe-fichier">
+        <button id="btnLogo" class="btn btn-sm btn-outline-secondary">🖼️ Choisir un logo</button>
+        <span id="nomLogo" class="texte-muted ms-2"></span>
+    </div>
+
+    <input type="file" id="logo" accept="" style='display: none'>
+
+    <div class="d-flex justify-content-evenly mt-3">
+        <button id="btnAjouter" class="btn btn-sm btn-danger">Ajouter le partenaire</button>
+    </div>
+</div>
