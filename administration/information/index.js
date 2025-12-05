@@ -181,6 +181,9 @@ function ouvrirFormulaire(id = null) {
     }
     formTitle.innerText = id ? 'Modifier une information' : 'Ajouter une information';
 
+    // Réinitialiser la liste des fichiers en attente
+    fichiersEnAttente = [];
+
     if (!id) {
         form.reset();
         if (tinymce) tinymce.get('contenu').setContent('');
@@ -238,32 +241,54 @@ function ouvrirFormulaire(id = null) {
 btnAjouter.onclick = () => ouvrirFormulaire(null);
 btnCancel.onclick = () => { if (formModal) { formModal.style.display = 'none'; formModal.setAttribute('aria-hidden', 'true'); } setEditing(null); };
 
+// Liste des fichiers en attente d'upload (pour conserver les fichiers sélectionnés)
+let fichiersEnAttente = [];
+
 btnPickFile.onclick = () => fichierInput.click();
 fichierInput.onchange = () => {
     if (fichierInput.files.length === 0) return;
-    const file = fichierInput.files[0];
     const params = { maxSize: 5 * 1024 * 1024, extensions: ['pdf'] };
-    if (!fichierValide(file, params)) return;
 
-    // Ajoute une ligne dans le tableau des fichiers sélectionnés
-    supprimerPlaceholderSiPresent();
-    const tr = document.createElement('tr');
-    const tdAct = tr.insertCell();
-    const tdFic = tr.insertCell();
-    tdFic.textContent = file.name;
+    // Parcourir tous les fichiers sélectionnés
+    for (const file of fichierInput.files) {
+        if (!fichierValide(file, params)) continue;
 
-    // Bouton suppression pour retirer le fichier sélectionné
-    const btn = creerBoutonSuppression(() => {
-        tr.remove();
-        if (listeFichiers.rows.length === 0) montrerAucunFichier();
-    });
-    if (btn && btn.tagName === 'BUTTON') btn.type = 'button';
-    tdAct.appendChild(btn);
+        // Vérifier si le fichier n'est pas déjà dans la liste
+        if (fichiersEnAttente.some(f => f.name === file.name && f.size === file.size)) {
+            afficherToast(`Le fichier "${file.name}" est déjà dans la liste`, 'warning');
+            continue;
+        }
 
-    listeFichiers.appendChild(tr);
+        // Ajoute le fichier à la liste en attente
+        fichiersEnAttente.push(file);
+
+        // Ajoute une ligne dans le tableau des fichiers sélectionnés
+        supprimerPlaceholderSiPresent();
+        const tr = document.createElement('tr');
+        tr.dataset.filename = file.name;
+        tr.dataset.filesize = file.size;
+        const tdAct = tr.insertCell();
+        const tdFic = tr.insertCell();
+        tdFic.textContent = file.name;
+
+        // Bouton suppression pour retirer le fichier sélectionné
+        const btn = creerBoutonSuppression(() => {
+            // Retirer le fichier de la liste en attente
+            fichiersEnAttente = fichiersEnAttente.filter(f => !(f.name === file.name && f.size === file.size));
+            tr.remove();
+            if (listeFichiers.rows.length === 0) montrerAucunFichier();
+        });
+        if (btn && btn.tagName === 'BUTTON') btn.type = 'button';
+        tdAct.appendChild(btn);
+
+        listeFichiers.appendChild(tr);
+    }
+
+    // Réinitialiser l'input pour permettre de resélectionner les mêmes fichiers
+    fichierInput.value = '';
 };
 
-// Soumission du formulaire: enregistre l'information, puis upload du fichier si présent
+// Soumission du formulaire: enregistre l'information, puis upload des fichiers si présents
 form.onsubmit = function (e) {
     e.preventDefault();
     effacerLesErreurs();
@@ -273,10 +298,20 @@ form.onsubmit = function (e) {
     appelAjax({
         url: '/administration/information/ajax/enregistrer.php', data: dataForm, success: (resp) => {
             const infoId = resp && resp.success ? resp.success : id;
-            // Si un fichier a été sélectionné, on l'envoie après l'enregistrement
-            if (fichierInput.files.length > 0) {
-                const fd = new FormData(); fd.append('idInformation', infoId); fd.append('fichier', fichierInput.files[0]);
-                appelAjax({ url: '/administration/information/ajax/ajouter.php', data: fd, success: () => location.reload(), error: () => { afficherToast('Enregistré, upload échoué', 'error'); } });
+            // Si des fichiers sont en attente d'upload, on les envoie après l'enregistrement
+            if (fichiersEnAttente.length > 0) {
+                const fd = new FormData();
+                fd.append('idInformation', infoId);
+                // Ajouter tous les fichiers au FormData avec le même nom (fichier[])
+                for (const file of fichiersEnAttente) {
+                    fd.append('fichier[]', file);
+                }
+                appelAjax({
+                    url: '/administration/information/ajax/ajouter.php',
+                    data: fd,
+                    success: () => location.reload(),
+                    error: () => { afficherToast('Enregistré, upload échoué', 'error'); }
+                });
             } else {
                 location.reload();
             }

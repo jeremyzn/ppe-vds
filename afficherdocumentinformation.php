@@ -31,6 +31,20 @@ if (!$document) {
 $idDoc = $document['id'];
 $fichier = $document['fichier'];
 $nomOriginal = $document['nom_original'];
+$idInformation = $document['idInformation'];
+
+// Vérifier le type d'information associée (Publique ou Privée)
+$information = $select->getRow('SELECT type FROM information WHERE id = :id', ['id' => $idInformation]);
+
+// Si l'information n'existe plus, refuser l'accès au document
+if (!$information) {
+    Erreur::afficherReponse("L'information associée au document n'existe plus.", 'global');
+}
+
+// Si l'information est de type Privée, vérifier que le membre est connecté
+if ($information['type'] === 'Privée' && empty($_SESSION['membre'])) {
+    Erreur::afficherReponse("Ce document est réservé aux membres du club. Veuillez vous connecter.", 'global');
+}
 
 // Le document doit être présent dans le répertoire /data/documentinformation
 $cheminFichier = RACINE . "/data/documentinformation/" . $fichier;

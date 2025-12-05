@@ -13,25 +13,43 @@ if (!isset($_POST['idInformation']) || !is_numeric($_POST['idInformation'])) {
 }
 $idInformation = (int) $_POST['idInformation'];
 
-if (!isset($_FILES['fichier'])) {
+// Vérifier si des fichiers ont été transmis (fichier ou fichier[])
+$filesKey = null;
+if (isset($_FILES['fichier'])) {
+	$filesKey = 'fichier';
+} elseif (isset($_FILES['fichier[]'])) {
+	// Dans certains cas, PHP peut utiliser ce nom
+	$filesKey = 'fichier[]';
+}
+
+if ($filesKey === null) {
 	Erreur::envoyerReponse('Le fichier n\'a pas été transmis', 'global');
 }
 
 // Normaliser $_FILES pour supporter l'envoi multiple (name[], multiple)
 $uploadedFiles = [];
-if (is_array($_FILES['fichier']['name'])) {
-	$count = count($_FILES['fichier']['name']);
+if (is_array($_FILES[$filesKey]['name'])) {
+	$count = count($_FILES[$filesKey]['name']);
 	for ($i = 0; $i < $count; $i++) {
+		// Ignorer les entrées vides (fichiers non sélectionnés)
+		if ($_FILES[$filesKey]['error'][$i] === UPLOAD_ERR_NO_FILE) {
+			continue;
+		}
 		$uploadedFiles[] = [
-			'name' => $_FILES['fichier']['name'][$i],
-			'tmp_name' => $_FILES['fichier']['tmp_name'][$i],
-			'error' => $_FILES['fichier']['error'][$i],
-			'size' => $_FILES['fichier']['size'][$i],
-			'type' => $_FILES['fichier']['type'][$i] ?? ''
+			'name' => $_FILES[$filesKey]['name'][$i],
+			'tmp_name' => $_FILES[$filesKey]['tmp_name'][$i],
+			'error' => $_FILES[$filesKey]['error'][$i],
+			'size' => $_FILES[$filesKey]['size'][$i],
+			'type' => $_FILES[$filesKey]['type'][$i] ?? ''
 		];
 	}
 } else {
-	$uploadedFiles[] = $_FILES['fichier'];
+	$uploadedFiles[] = $_FILES[$filesKey];
+}
+
+// Vérifier qu'au moins un fichier a été transmis
+if (empty($uploadedFiles)) {
+	Erreur::envoyerReponse('Aucun fichier valide n\'a été transmis', 'global');
 }
 
 // Traitement de chaque fichier
