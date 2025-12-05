@@ -132,35 +132,74 @@ class Document extends Table
         $select = new Select();
         return $select->getRow($sql, ['id' => $id]);
     }
+
     // ------------------------------------------------------------------------------------------------
 
-    /**
-     * Supprime le fichier PDF associé au document
-     * @param string $fichier
-     * @return void
-     */
-    public static function supprimerFichier(string $fichier): void
+
+    // Récupère un objet PDO ; adapte selon votre projet
+
+    public static function supprimer(int $id): bool
     {
-        $chemin = self::DIR . '/' . $fichier;
-        if (is_file($chemin)) {
-            unlink($chemin);
+        $pdo = self::pdo();
+        try {
+            $pdo->beginTransaction();
+            $stmt = $pdo->prepare('DELETE FROM documents WHERE id = :id');
+            $stmt->execute([':id' => $id]);
+            $deleted = ($stmt->rowCount() > 0);
+            if ($deleted) {
+                $pdo->commit();
+                return true;
+            } else {
+                $pdo->rollBack();
+                return false;
+            }
+        } catch (Exception $e) {
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+            return false;
         }
     }
 
-
-    /**
-     * Supprime un enregistrement de la table document
-     * @param int $id
-     * @return void
-     */
-    public static function supprimer(int $id): void
+    protected static function pdo(): PDO
     {
-        $db = Database::getInstance();
-        $sql = "delete from document where id = :id;";
-        $cmd = $db->prepare($sql);
-        $cmd->bindValue('id', $id);
-        $cmd->execute();
+        if (class_exists('Database') && method_exists('Database', 'getInstance')) {
+            return Database::getInstance();
+        }
+        if (isset($GLOBALS['pdo']) && $GLOBALS['pdo'] instanceof PDO) {
+            return $GLOBALS['pdo'];
+        }
+        throw new RuntimeException('PDO non disponible');
     }
 
+    public static function supprimerFichier(?string $fichier): bool
+    {
+        if (empty($fichier)) {
+            return false;
+        }
 
+        // chemins candidates (adapter si nécessaire)
+        $candidates = [
+            $fichier,
+            __DIR__ . '/../../uploads/' . $fichier,
+            __DIR__ . '/../../../uploads/documents/' . $fichier,
+            __DIR__ . '/../../../public/uploads/' . $fichier,
+        ];
+
+        if (defined('DOCUMENT_UPLOAD_DIR')) {
+            $candidates[] = rtrim(DOCUMENT_UPLOAD_DIR, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $fichier;
+        }
+
+        foreach ($candidates as $path) {
+            if (file_exists($path) && is_file($path)) {
+                try {
+                    return unlink($path);
+                } catch (Throwable $e) {
+                    return false;
+                }
+            }
+        }
+
+        return false;
+    }
 }

@@ -1,4 +1,5 @@
 <?php
+// File: administration/document/ajax/supprimer.php
 // Contrôle de l'existence du paramètre attendu : id
 if (!isset($_POST['id'])) {
     Erreur::envoyerReponse("Paramètre manquant", 'global');
@@ -13,10 +14,13 @@ if (!$ligne) {
 }
 
 // suppression de l'enregistrement en base de données
-document::supprimer($id);
+$ok = Document::supprimer($id);
+if (!$ok) {
+    Erreur::envoyerReponse("La suppression en base a échoué", 'global');
+}
 
-// suppression du fichier PDF associé
-document::supprimerFichier($ligne['fichier']);
+// suppression du fichier PDF associé (tentative, non bloquante)
+Document::supprimerFichier($ligne['fichier']);
 
 $reponse = ['success' => "Le document a été supprimé"];
 echo json_encode($reponse, JSON_UNESCAPED_UNICODE);

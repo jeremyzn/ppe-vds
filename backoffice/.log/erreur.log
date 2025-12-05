@@ -160,3 +160,13 @@
 14/11/2025 16:39:13	Erreur SQL : SQLSTATE[HY093]: Invalid parameter number	/index.php	::1
 14/11/2025 16:42:15	Erreur SQL : SQLSTATE[HY093]: Invalid parameter number	/index.php	::1
 14/11/2025 16:42:15	Erreur SQL : SQLSTATE[HY093]: Invalid parameter number	/index.php	::1
+05/12/2025 13:40:01	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.document' n'existe pas	/index.php	::1
+05/12/2025 13:40:01	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.document' n'existe pas	/index.php	::1
+05/12/2025 13:40:35	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.document' n'existe pas	/index.php	::1
+05/12/2025 13:40:35	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.document' n'existe pas	/index.php	::1
+05/12/2025 13:41:05	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.document' n'existe pas	/index.php	::1
+05/12/2025 13:41:05	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.document' n'existe pas	/index.php	::1
+05/12/2025 13:41:07	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.document' n'existe pas	/index.php	::1
+05/12/2025 13:41:07	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.document' n'existe pas	/index.php	::1
+05/12/2025 13:42:04	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.document' n'existe pas	/index.php	::1
+05/12/2025 13:42:04	Erreur SQL : SQLSTATE[42S02]: Base table or view not found: 1146 La table 'ppe.document' n'existe pas	/index.php	::1
