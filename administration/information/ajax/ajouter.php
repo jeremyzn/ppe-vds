@@ -1,24 +1,33 @@
 <?php
-// activation du chargement dynamique des ressources
+/**
+ * Upload de documents PDF pour une information
+ * Supporte l'envoi multiple de fichiers
+ * Les fichiers sont stockés dans /data/documentinformation/
+ */
+
 require $_SERVER['DOCUMENT_ROOT'] . '/include/autoload.php';
 
-// Vérification des droits
+// ============================================================================
+// CONTRÔLES DE SÉCURITÉ
+// ============================================================================
+
 if (empty($_SESSION['membre'])) {
 	Erreur::envoyerReponse('Accès refusé', 'global');
 }
 
-// Vérification des paramètres
 if (!isset($_POST['idInformation']) || !is_numeric($_POST['idInformation'])) {
 	Erreur::envoyerReponse('Information non précisée', 'global');
 }
 $idInformation = (int) $_POST['idInformation'];
 
-// Vérifier si des fichiers ont été transmis (fichier ou fichier[])
+// ============================================================================
+// DÉTECTION DES FICHIERS UPLOADÉS
+// ============================================================================
+
 $filesKey = null;
 if (isset($_FILES['fichier'])) {
 	$filesKey = 'fichier';
 } elseif (isset($_FILES['fichier[]'])) {
-	// Dans certains cas, PHP peut utiliser ce nom
 	$filesKey = 'fichier[]';
 }
 
@@ -26,12 +35,14 @@ if ($filesKey === null) {
 	Erreur::envoyerReponse('Le fichier n\'a pas été transmis', 'global');
 }
 
-// Normaliser $_FILES pour supporter l'envoi multiple (name[], multiple)
+// ============================================================================
+// NORMALISATION DES FICHIERS (support upload multiple)
+// ============================================================================
+
 $uploadedFiles = [];
 if (is_array($_FILES[$filesKey]['name'])) {
 	$count = count($_FILES[$filesKey]['name']);
 	for ($i = 0; $i < $count; $i++) {
-		// Ignorer les entrées vides (fichiers non sélectionnés)
 		if ($_FILES[$filesKey]['error'][$i] === UPLOAD_ERR_NO_FILE) {
 			continue;
 		}
@@ -47,28 +58,31 @@ if (is_array($_FILES[$filesKey]['name'])) {
 	$uploadedFiles[] = $_FILES[$filesKey];
 }
 
-// Vérifier qu'au moins un fichier a été transmis
 if (empty($uploadedFiles)) {
 	Erreur::envoyerReponse('Aucun fichier valide n\'a été transmis', 'global');
 }
 
-// Traitement de chaque fichier
+// ============================================================================
+// TRAITEMENT ET ENREGISTREMENT DES FICHIERS
+// ============================================================================
+
 $db = Database::getInstance();
 $sql = "INSERT INTO documentinformation (fichier, idInformation, nom_original) VALUES (:fichier, :idInformation, :nom_original)";
 $results = [];
+
 foreach ($uploadedFiles as $f) {
-	// instanciation et paramétrage d'un objet InputFile pour chaque fichier
+	// Validation du fichier (extension, taille, type MIME)
 	$file = new InputFile($f, Information::getConfig());
 	if (!$file->checkValidity()) {
 		Erreur::envoyerReponse($file->getValidationMessage(), 'fichier');
 	}
 
-	// copie du fichier physique
+	// Copie vers le répertoire de destination
 	if (!$file->copy()) {
 		Erreur::envoyerReponse($file->getValidationMessage(), 'fichier');
 	}
 
-	// enregistrement en base
+	// Insertion en base de données
 	$stmt = $db->prepare($sql);
 	$stmt->execute([
 		'fichier' => $file->Value,

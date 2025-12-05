@@ -1,13 +1,20 @@
 <?php
-// enregistrement (ajout/modification) d'une information depuis l'administration
+/**
+ * Enregistrement d'une information (ajout ou modification)
+ * Reçoit : titre, contenu, type (Publique|Privée), id (optionnel pour modification)
+ * Retourne : JSON { success: id } ou { error: ... }
+ */
+
 require $_SERVER['DOCUMENT_ROOT'] . '/include/autoload.php';
 
-// droits
+// ============================================================================
+// CONTRÔLES DE SÉCURITÉ
+// ============================================================================
+
 if (empty($_SESSION['membre'])) {
     Erreur::envoyerReponse('Accès refusé', 'global');
 }
 
-// on s'attend à titre, contenu, type (Publique|Privée) et éventuellement id
 if (!Std::existe('table', 'titre', 'contenu', 'type')) {
     Erreur::envoyerReponse('Paramètres manquants', 'global');
 }
@@ -17,22 +24,25 @@ if ($tableName !== 'Information' && $tableName !== 'information') {
     Erreur::envoyerReponse('Table non autorisée', 'global');
 }
 
-// création dynamique d'un objet Information
+// ============================================================================
+// PRÉPARATION DES DONNÉES
+// ============================================================================
+
 $info = new Information();
 
-// alimentation
-// titre, contenu, type
-if (isset($_POST['titre'])) $info->setValue('titre', $_POST['titre']);
-if (isset($_POST['contenu'])) $info->setValue('contenu', $_POST['contenu']);
+if (isset($_POST['titre']))
+    $info->setValue('titre', $_POST['titre']);
+if (isset($_POST['contenu']))
+    $info->setValue('contenu', $_POST['contenu']);
 
-// validation du type (enum)
+// Validation du type (enum: Publique ou Privée)
 $allowed = ['Publique', 'Privée'];
 if (!isset($_POST['type']) || !in_array($_POST['type'], $allowed, true)) {
     Erreur::envoyerReponse('Type invalide', 'type');
 }
 $info->setValue('type', $_POST['type']);
 
-// auteur depuis la session (nom + prénom si disponibles)
+// Récupération de l'auteur depuis la session
 $auteur = '';
 if (isset($_SESSION['membre']['prenom']) || isset($_SESSION['membre']['nom'])) {
     $prenom = $_SESSION['membre']['prenom'] ?? '';
@@ -41,12 +51,14 @@ if (isset($_SESSION['membre']['prenom']) || isset($_SESSION['membre']['nom'])) {
 }
 $info->setValue('auteur', $auteur ?: ($_SESSION['membre']['login'] ?? ''));
 
-// si id présent => update
+// ============================================================================
+// MODIFICATION (si id présent)
+// ============================================================================
+
 if (!empty($_POST['id']) && is_numeric($_POST['id'])) {
-    $id = (int)$_POST['id'];
-    // construire le tableau des valeurs à mettre à jour
+    $id = (int) $_POST['id'];
     $lesValeurs = [];
-    foreach (['titre','contenu','type','auteur'] as $col) {
+    foreach (['titre', 'contenu', 'type', 'auteur'] as $col) {
         $lesValeurs[$col] = $info->getColonne($col)->Value;
     }
     $info->update($id, $lesValeurs);
@@ -54,7 +66,10 @@ if (!empty($_POST['id']) && is_numeric($_POST['id'])) {
     exit;
 }
 
-// sinon insert
+// ============================================================================
+// AJOUT (nouveau)
+// ============================================================================
+
 if (!$info->donneesTransmises() || !$info->checkAll()) {
     echo json_encode(['error' => $info->getLesErreurs()], JSON_UNESCAPED_UNICODE);
     exit;
