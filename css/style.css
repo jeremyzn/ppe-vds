@@ -1,7 +1,7 @@
 /* ------------------------------------------------------------
    Feuille de style globale
-   Mise à jour : 14 octobre 2025
-   Version : 2025.9
+   Mise à jour : 3 octobre 2025
+   Version : 2025.8
 ------------------------------------------------------------ */
 
 /*
@@ -200,7 +200,7 @@ tr.clickable:hover {
 }
 
 tr:active {
-    background-color: rgb(255, 255, 255);
+    background-color: red;
 }
 
 thead {
@@ -475,7 +475,7 @@ select {
     content: ' *';
 }
 
-.erreur, .messageErreur {
+.erreur {
     font-size: 0.9rem;
     font-weight: bold;
     color: var(--text-error);
@@ -709,13 +709,11 @@ output {
 /* personnalisation popover */
 
 .popover-body .contenu-popover {
-    font-size: 0.6rem;
-!important;
+    font-size: 0.6rem !important;
 }
 
 .tooltip-inner {
-    font-size: 0.6rem;
-!important;
+    font-size: 0.6rem !important;
 }
 
 /* Styles pour le smartphone */
@@ -814,58 +812,4 @@ output {
     .link {
         font-size: 16px; /* Réduire la taille de la police sur les petits écrans */
     }
-}
-
-
-
-/* --- Tableaux des inscriptions --- */
-.table-inscription {
-    width: 100%;
-    border-collapse: collapse;
-    border: 1px solid #ddd;
-    margin-bottom: 20px;
-}
-
-.table-inscription td {
-    padding: 8px; /* Espacement interne pour toutes les cellules */
-    border-bottom: 1px solid #eee; /* Optionnel : ajoute une ligne fine entre les rangées */
-}
-
-/* La colonne de gauche (Les étiquettes : Nom, Date, etc.) */
-.table-inscription .col-label {
-    font-weight: bold;
-    background-color: #f4f4f4;
-    width: 30%; /* Largeur fixe pour aligner tous les tableaux pareil */
-}
-
-/* Le nom de la course (style spécifique) */
-.table-inscription .valeur-nom {
-    font-weight: bold;
-    color: #0056b3;
-}
-
-/* Le bouton vert "S'inscrire" */
-.btn-inscription {
-    display: inline-block;
-    text-decoration: none;
-    color: white;
-    background-color: #28a745;
-    padding: 5px 10px;
-    border-radius: 4px;
-    transition: background-color 0.2s;
-}
-
-.btn-inscription:hover {
-    background-color: #218838; /* Devient plus foncé au survol */
-    color: white;
-}
-
-/* Le lien bleu "Voir les inscrits" */
-.lien-inscrits {
-    text-decoration: none;
-    color: #007bff;
-}
-
-.lien-inscrits:hover {
-    text-decoration: underline;
 }
