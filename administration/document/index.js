@@ -37,13 +37,10 @@ function supprimer(id) {
  * Remplace le fichier sur le serveur
  * @param file
  */
-function remplacer(file) {
-    // transfert du fichier vers le serveur dans le répertoire sélectionné
-    const formData = new FormData();
-    formData.append('fichier', file);
-    formData.append('nomFichier', nomFichier);
+function maj(id) {
+
     appelAjax({
-        url: 'ajax/remplacer.php',
+        url: 'ajax/maj.php',
         data: formData,
         success: () => afficherToast("Opération réalisée avec succès")
     });
@@ -87,10 +84,12 @@ for (const element of lesDocuments) {
     td.appendChild(sep);
 
     let modif = document.createElement('a');
-    modif.href = 'maj.php?id=' + element.id; // adapter l'URL de modification
+
     modif.target = 'pdf';
     modif.innerText = '✏️';
     modif.className = 'modif-link';
+    modif.style.cursor = 'pointer';
+    modif.addEventListener('click', maj(element.id));
     td.appendChild(modif);
 
 // séparateur puis lien supprimer
@@ -103,7 +102,7 @@ for (const element of lesDocuments) {
     sup.innerText = '❌';
     sup.className = 'sup-link';
     sup.style.cursor = 'pointer';
-    sup.addEventListener('click', function(e) {
+    sup.addEventListener('click', function() {
         if (confirm("Confirmer la suppression ?")) supprimer(element.id);
     });
     td.appendChild(sup);
