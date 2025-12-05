@@ -1,10 +1,11 @@
 <?php
+require $_SERVER['DOCUMENT_ROOT'] . '/include/autoload.php';
 // Contrôle de l'existence du paramètre attendu : id
 if (!isset($_POST['id'])) {
     Erreur::envoyerReponse("Paramètre manquant", 'global');
 }
 
-$id = (int)$_POST['id'];
+$id = $_POST['id'];
 
 // vérification de l'existence du document
 $ligne = Document::getById($id);

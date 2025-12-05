@@ -1,12 +1,20 @@
 "use strict";
 
+
+// -----------------------------------------------------------------------------------
+// Import des fonctions nécessaires
+// -----------------------------------------------------------------------------------
+
+import {appelAjax} from "/composant/fonction/ajax.js";
+import {afficherToast} from '/composant/fonction/afficher.js';
+
+
 // -----------------------------------------------------------------------------------
 // Déclaration des variables globales
 // -----------------------------------------------------------------------------------
 
 /* global lesDocuments */
 
-const lesLignes = document.getElementById('lesLignes');
 
 
 // -----------------------------------------------------------------------------------
@@ -91,13 +99,11 @@ for (const element of lesDocuments) {
     td.appendChild(sep2);
 
     let sup = document.createElement('a');
-    sup.href = '#';
     sup.target = '_self';
     sup.innerText = '❌';
     sup.className = 'sup-link';
     sup.style.cursor = 'pointer';
     sup.addEventListener('click', function(e) {
-        e.preventDefault();
         if (confirm("Confirmer la suppression ?")) supprimer(element.id);
     });
     td.appendChild(sup);

@@ -108,7 +108,7 @@ class Document extends Table
             $sql = "SELECT id, titre, type, fichier FROM document ORDER BY titre;";
         } else {
             // non connecté : exclure les documents réservés aux membres
-            $sql = "SELECT id, titre, type, fichier FROM document WHERE type not in ('Membre')  ORDER BY titre;";
+            $sql = "SELECT id, titre, type, fichier FROM document WHERE type != 'Membre'  ORDER BY titre;";
         }
         $lesLignes = $select->getRows($sql);
         foreach ($lesLignes as &$ligne) {
@@ -147,7 +147,6 @@ class Document extends Table
         }
     }
 
-
     /**
      * Supprime un enregistrement de la table document
      * @param int $id
@@ -156,7 +155,7 @@ class Document extends Table
     public static function supprimer(int $id): void
     {
         $db = Database::getInstance();
-        $sql = "delete from document where id = :id;";
+        $sql = "Delete from document  where id = :id;";
         $cmd = $db->prepare($sql);
         $cmd->bindValue('id', $id);
         $cmd->execute();
