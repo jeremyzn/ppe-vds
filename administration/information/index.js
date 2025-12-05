@@ -23,6 +23,7 @@ const btnAjouter = document.getElementById('btnAjouter');
 const formModal = document.getElementById('formModal');
 const formTitle = document.getElementById('formTitle');
 const btnCancel = document.getElementById('btnCancel');
+const btnCloseModal = document.getElementById('btnCloseModal');
 const form = document.getElementById('formInfo');
 const fichierInput = document.getElementById('fichierModal');
 const btnPickFile = document.getElementById('btnPickFile');
@@ -63,8 +64,7 @@ function ensureEditingStyle() {
     const style = document.createElement('style');
     style.id = 'style-row-editing';
     style.textContent = `
-        .row-editing { background-color: #fff8c4 !important; }
-        .row-editing td { border-left: 4px solid #ffcc00; }
+        .row-editing td { background-color: #90caf9 !important; }
     `;
     document.head.appendChild(style);
 }
@@ -261,8 +261,8 @@ function ouvrirFormulaire(id = null) {
     setEditing(id);
 }
 
-btnAjouter.onclick = () => ouvrirFormulaire(null);
-btnCancel.onclick = () => {
+/** Ferme le modal et réinitialise l'état */
+function fermerModal() {
     fichiersEnAttente = [];
     documentsASupprimer = [];
     if (formModal) {
@@ -270,7 +270,11 @@ btnCancel.onclick = () => {
         formModal.setAttribute('aria-hidden', 'true');
     }
     setEditing(null);
-};
+}
+
+btnAjouter.onclick = () => ouvrirFormulaire(null);
+btnCancel.onclick = fermerModal;
+if (btnCloseModal) btnCloseModal.onclick = fermerModal;
 
 // ============================================================================
 // GESTION DES FICHIERS PDF
